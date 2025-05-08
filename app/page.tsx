@@ -1,6 +1,3 @@
-// import Image from 'next/image';
-// import { dummyPatientData } from './data/dummy';
-// import { PatientCard } from './components/patient/PatientCard';
 import { Separator } from '@/components/ui/separator';
 
 export default function Home() {
@@ -30,7 +27,6 @@ export default function Home() {
                     어떻게 되세요?
                   </p>
                 </div>
-                {/* <span className="mt-1 text-xs text-gray-400">오전 10:23</span> */}
               </div>
             </div>
 
@@ -42,27 +38,12 @@ export default function Home() {
                     <span className="font-bold">유예지</span> 입니다.
                   </p>
                 </div>
-                {/* <span className="mt-1 text-xs text-gray-400">오전 10:25</span> */}
               </div>
               <div className="bg-primary/30 border-primary flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2">
                 <span className="text-primary">😊</span>
               </div>
             </div>
           </div>
-
-          {/* 왼쪽 말풍선 (상대방) */}
-          {/* <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gray-300">
-              <span className="text-gray-600">👨</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="mb-1 text-sm text-gray-500">홍길동</span>
-              <div className="max-w-[80%] rounded-2xl rounded-tl-none bg-gray-100 px-4 py-2">
-                <p className="text-gray-800">감사합니다. 10분 내로 도착하겠습니다.</p>
-              </div>
-              <span className="mt-1 text-xs text-gray-400">오전 10:26</span>
-            </div>
-          </div> */}
         </div>
 
         {/* 메시지 입력 영역 */}
