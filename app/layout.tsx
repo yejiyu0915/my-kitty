@@ -1,19 +1,14 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
 import TaskList from '@/app/_components/tasks/TaskList';
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+const pretendard = localFont({
+  src: './fonts/PretendardVariable.woff2',
+  variable: '--font-pretendard',
+  display: 'swap',
 });
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
 export const metadata: Metadata = {
   title: '고양이 병원',
   description: 'by 유예지',
@@ -26,8 +21,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${geistSans.variable} ${geistMono.variable} bg-primary/5 antialiased`}>
-        <div className="relative grid h-screen grid-rows-[auto_1fr_auto] items-center justify-items-center gap-12 overflow-hidden p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
+      <body className={`${pretendard.variable} bg-primary/5 antialiased`}>
+        <div className="relative grid h-screen grid-rows-[auto_1fr_auto] items-center justify-items-center gap-12 overflow-hidden p-8 pb-20 font-[family-name:var(--font-pretendard)] sm:p-20">
           <Header />
           <main className="flex h-full w-full max-w-6xl flex-col items-center gap-[32px] overflow-y-auto sm:items-start">
             {children}
