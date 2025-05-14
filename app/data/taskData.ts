@@ -18,7 +18,7 @@ export const taskData = [
       { text: 'TaskList 코드 리팩토링', isDone: true },
       { text: 'TaskList 카테고리 분리', isDone: true },
       { text: 'TaskList 카테고리 토글 구현', isDone: true },
-      { text: 'TaskList 코드 리팩토링(2)', isDone: true },
+      { text: 'TaskList 코드 리팩토링(2)', isDone: false },
     ],
   },
   {

@@ -3,7 +3,6 @@ import localFont from 'next/font/local';
 import './globals.css';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
-import TaskList from '@/app/_components/tasks/TaskList';
 const pretendard = localFont({
   src: './fonts/PretendardVariable.woff2',
   variable: '--font-pretendard',
@@ -27,7 +26,6 @@ export default function RootLayout({
           <main className="flex h-full w-full max-w-6xl flex-col items-center gap-[32px] overflow-y-auto sm:items-start">
             {children}
           </main>
-          <TaskList />
           <Footer />
         </div>
       </body>
