@@ -1,13 +1,11 @@
 'use client';
 
+import { memo } from 'react';
 import { calculateTaskProgress } from '@/app/_components/tasks/utils/taskProgressCalculate';
 import type { TaskListCategoryTitleTextProps } from '@/app/_components/tasks/types/task';
 import Progress from '@/app/_components/tasks/ui/TaskProgress';
 
-export default function TaskListCategoryTitleText({
-  category,
-  categoryIndex,
-}: TaskListCategoryTitleTextProps) {
+function TaskListCategoryTitleText({ category, categoryIndex }: TaskListCategoryTitleTextProps) {
   const { completed, total, percentage } = calculateTaskProgress(category.content);
 
   return (
@@ -22,3 +20,5 @@ export default function TaskListCategoryTitleText({
     </div>
   );
 }
+
+export default memo(TaskListCategoryTitleText);

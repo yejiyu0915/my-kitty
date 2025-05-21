@@ -1,5 +1,6 @@
 'use client';
 
+import { useCallback } from 'react';
 import type { TaskListCategoryProps } from '@/app/_components/tasks/types/task';
 import TaskListCategoryTitleText from './TaskListCategoryTitleText';
 import TaskListItem from './TaskListItem';
@@ -11,16 +12,24 @@ export default function TaskListCategory({
   toggleCategory,
   toggleTask,
 }: TaskListCategoryProps) {
+  const handleToggle = useCallback(() => {
+    toggleCategory(categoryIndex);
+  }, [toggleCategory, categoryIndex]);
+
+  const handleTaskToggle = useCallback(
+    (taskIndex: number) => {
+      toggleTask(categoryIndex, taskIndex);
+    },
+    [toggleTask, categoryIndex]
+  );
+
   return (
     <Accordion
       isOpen={category.isOpen}
-      onToggle={() => toggleCategory(categoryIndex)}
+      onToggle={handleToggle}
       header={<TaskListCategoryTitleText category={category} categoryIndex={categoryIndex} />}
     >
-      <TaskListItem
-        tasks={category.content}
-        toggleTask={(taskIndex) => toggleTask(categoryIndex, taskIndex)}
-      />
+      <TaskListItem tasks={category.content} toggleTask={handleTaskToggle} />
     </Accordion>
   );
 }

@@ -35,6 +35,10 @@ export interface TaskListContentProps {
 export interface TaskListHeaderProps {
   toggleList: () => void;
   tasks: TaskCategory[];
+  totalStats: {
+    total: number;
+    completed: number;
+  };
 }
 
 export interface TaskListItemProps {
