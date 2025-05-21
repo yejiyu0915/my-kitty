@@ -1,12 +1,12 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useCallback, memo } from 'react';
 import type { TaskListCategoryProps } from '@/app/_components/tasks/types/task';
 import TaskListCategoryTitleText from './TaskListCategoryTitleText';
 import TaskListItem from './TaskListItem';
 import Accordion from '@/components/ui/accordion';
 
-export default function TaskListCategory({
+function TaskListCategory({
   category,
   categoryIndex,
   toggleCategory,
@@ -33,3 +33,5 @@ export default function TaskListCategory({
     </Accordion>
   );
 }
+
+export default memo(TaskListCategory);

@@ -34,7 +34,6 @@ export interface TaskListContentProps {
 
 export interface TaskListHeaderProps {
   toggleList: () => void;
-  tasks: TaskCategory[];
   totalStats: {
     total: number;
     completed: number;
@@ -49,7 +48,6 @@ export interface TaskListItemProps {
 export interface ProgressProps {
   completed: number;
   total: number;
-  percentage: number;
   className?: string;
   showLabel?: boolean;
   label?: string;

@@ -1,28 +1,19 @@
-import type { TaskCategory, TaskContent } from '@/app/_components/tasks/types/task';
-
-export function calculateTaskProgress(tasks: TaskContent[]) {
-  const completed = tasks.reduce((acc, task) => acc + (task.isDone ? 1 : 0), 0);
-  const total = tasks.length;
-  const percentage = Math.round((completed / total) * 100);
-
-  return {
-    completed,
-    total,
-    percentage,
-  };
-}
+import type { TaskCategory } from '@/app/_components/tasks/types/task';
 
 export function calculateCategoryProgress(categories: TaskCategory[]) {
-  const completed = categories.reduce(
-    (acc, category) => acc + category.content.filter((task) => task.isDone).length,
-    0
+  const stats = categories.reduce(
+    (acc, category) => {
+      const completed = category.content.filter((task) => task.isDone).length;
+      return {
+        completed: acc.completed + completed,
+        total: acc.total + category.content.length,
+      };
+    },
+    { completed: 0, total: 0 }
   );
-  const total = categories.reduce((acc, category) => acc + category.content.length, 0);
-  const percentage = Math.round((completed / total) * 100);
 
   return {
-    completed,
-    total,
-    percentage,
+    ...stats,
+    percentage: Math.round((stats.completed / stats.total) * 100),
   };
 }

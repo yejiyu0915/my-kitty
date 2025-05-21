@@ -5,11 +5,12 @@ import type { ProgressProps } from '@/app/_components/tasks/types/task';
 export default function Progress({
   completed,
   total,
-  percentage,
   className = '',
   showLabel = false,
   label = '진행률',
-}: ProgressProps) {
+}: Omit<ProgressProps, 'percentage'>) {
+  const percentage = Math.round((completed / total) * 100);
+
   return (
     <span className={`flex items-center gap-1 text-sm text-gray-500 ${className}`}>
       {showLabel && <span>{label}:</span>}
