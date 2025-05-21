@@ -1,14 +1,7 @@
 'use client';
 
-import type { TaskCategory } from '@/app/types/task';
+import type { TaskListContentProps } from '@/app/_components/tasks/types/task';
 import TaskListCategory from './TaskListCategory';
-
-interface TaskListContentProps {
-  isOpen: boolean;
-  tasks: TaskCategory[];
-  toggleCategory: (categoryIndex: number) => void;
-  toggleTask: (categoryIndex: number, taskIndex: number) => void;
-}
 
 export default function TaskListContent({
   isOpen,
@@ -26,7 +19,7 @@ export default function TaskListContent({
       <div className="space-y-2">
         {tasks.map((category, categoryIndex) => (
           <TaskListCategory
-            key={categoryIndex}
+            key={category.id}
             category={category}
             categoryIndex={categoryIndex}
             toggleCategory={toggleCategory}

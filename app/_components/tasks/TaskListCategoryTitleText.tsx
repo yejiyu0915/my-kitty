@@ -1,12 +1,8 @@
 'use client';
 
-import { calculateTaskProgress } from '@/app/utils/taskProgress';
-import type { TaskCategory } from '@/app/types/task';
-
-interface TaskListCategoryTitleTextProps {
-  category: TaskCategory;
-  categoryIndex: number;
-}
+import { calculateTaskProgress } from '@/app/_components/tasks/utils/taskProgressCalculate';
+import type { TaskListCategoryTitleTextProps } from '@/app/_components/tasks/types/task';
+import Progress from '@/app/_components/tasks/ui/TaskProgress';
 
 export default function TaskListCategoryTitleText({
   category,
@@ -22,14 +18,7 @@ export default function TaskListCategoryTitleText({
         </span>
         <span>{category.category}</span>
       </h3>
-      <span className="flex items-center gap-1 text-xs text-gray-500">
-        <span className={`${percentage === 100 ? 'text-primary font-bold' : ''}`}>
-          {percentage}%
-        </span>
-        <span>
-          ({completed}/{total})
-        </span>
-      </span>
+      <Progress completed={completed} total={total} percentage={percentage} className="text-xs" />
     </div>
   );
 }

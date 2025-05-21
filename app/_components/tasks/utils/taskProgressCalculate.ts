@@ -1,4 +1,4 @@
-import type { TaskCategory, TaskContent } from '@/app/types/task';
+import type { TaskCategory, TaskContent } from '@/app/_components/tasks/types/task';
 
 export function calculateTaskProgress(tasks: TaskContent[]) {
   const completed = tasks.reduce((acc, task) => acc + (task.isDone ? 1 : 0), 0);

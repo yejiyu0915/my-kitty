@@ -1,10 +1,6 @@
-'use client';
+﻿'use client';
 
-interface ButtonProps {
-  onClick: () => void;
-  children: React.ReactNode;
-  className?: string;
-}
+import { ButtonProps } from '@/app/types/common';
 
 export default function Button({ onClick, children, className = '' }: ButtonProps) {
   return (
