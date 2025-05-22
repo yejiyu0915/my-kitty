@@ -1,5 +1,7 @@
 ﻿'use client';
 
+import { cn } from '@/lib/utils';
+
 interface CheckboxProps {
   checked: boolean;
   onChange: () => void;
@@ -7,13 +9,16 @@ interface CheckboxProps {
   className?: string;
 }
 
-export default function Checkbox({ checked, onChange, label }: CheckboxProps) {
+export default function Checkbox({ checked, onChange, label, className }: CheckboxProps) {
   return (
     <>
       <div className="relative flex h-4 w-4 items-center justify-center">
         <input
           type="checkbox"
-          className="peer checked:border-primary checked:bg-primary hover:border-primary/50 h-4 w-4 cursor-pointer appearance-none rounded border-2 border-gray-300 bg-white transition-all"
+          className={cn(
+            'peer checked:border-primary checked:bg-primary hover:border-primary/50 h-4 w-4 cursor-pointer appearance-none rounded border-2 border-gray-300 bg-white transition-all',
+            className
+          )}
           checked={checked}
           onChange={onChange}
         />
@@ -34,9 +39,10 @@ export default function Checkbox({ checked, onChange, label }: CheckboxProps) {
       </div>
       {label && (
         <label
-          className={`flex-1 cursor-pointer text-sm leading-5 transition-colors ${
+          className={cn(
+            'flex-1 cursor-pointer text-sm leading-5 transition-colors',
             checked ? 'text-gray-400 line-through' : 'text-gray-700'
-          }`}
+          )}
           onClick={onChange}
         >
           {label}
