@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { ChatMessage } from '../types/chatBubble';
+import { ChatMessage } from '../types/chat';
 
 export const chatScript: ChatMessage[] = [
   {
@@ -12,7 +12,11 @@ export const chatScript: ChatMessage[] = [
   },
   {
     id: nanoid(),
-    message: '그렇군요. 환자분 정보 한 번 확인하겠습니다.',
+    message: '어느 정도로 아프다고 느끼시나요?',
+  },
+  {
+    id: nanoid(),
+    message: '아이고, 그러셨군요. 네 알겠습니다. 예약에 앞서 환자분 정보 한 번 확인하겠습니다.',
   },
   {
     id: nanoid(),

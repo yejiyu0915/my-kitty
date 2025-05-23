@@ -1,4 +1,4 @@
-import { ChatMessageProps } from '@/app/_components/chat/types/chatBubble';
+import { ChatMessageProps } from '../../types/chat';
 
 export default function ChatMessage({ message, isDoctor, className }: ChatMessageProps) {
   return (

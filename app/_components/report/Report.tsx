@@ -22,7 +22,7 @@ export default function Report() {
       </div>
 
       <div className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent my-6 flex-1 overflow-y-auto">
-        <div className="my-8 mt-0 flex flex-col gap-4">
+        {/* <div className="my-8 mt-0 flex flex-col gap-4">
           <ul className="space-y-4">
             <li className="flex items-center gap-2">
               <span className="text-primary">■</span>
@@ -55,7 +55,7 @@ export default function Report() {
               <span className="text-md font-bold text-gray-700">코가 빠져서 못 먹음</span>
             </li>
           </ul>
-        </div>
+        </div> */}
       </div>
     </div>
   );

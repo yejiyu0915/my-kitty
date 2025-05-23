@@ -1,9 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { chatSteps } from './data/chatSteps';
-import { ChatMessage, ChatBottomProps } from './types/chatBubble';
-import { nanoid } from 'nanoid';
-import ChatInput from './ui/input/ChatInput';
+import { ChatBottomProps } from './types/chat';
+import ChatInput from './ui/ChatInput';
+import Button from '@/components/ui/button';
+import { validateInput, createChatMessage, handleKeyPress } from './utils/chatInput';
 
 export default function ChatBottom({
   currentStep,
@@ -12,38 +13,23 @@ export default function ChatBottom({
   animation,
 }: ChatBottomProps) {
   const [inputValue, setInputValue] = useState('');
-  const [isInputValid, setIsInputValid] = useState(false);
-  const [error, setError] = useState('');
-
+  const [error, setError] = useState<string | null>(null);
   const currentStepData = chatSteps[currentStep];
 
-  // 입력값 유효성 검사
-  useEffect(() => {
-    if (currentStepData?.validation) {
-      setIsInputValid(currentStepData.validation(inputValue));
-    } else {
-      setIsInputValid(inputValue.trim().length > 0);
-    }
-  }, [inputValue, currentStepData]);
+  const isInputValid = validateInput(inputValue, currentStepData.validation);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isInputValid || isTyping) return;
 
-    const newMessage: ChatMessage = {
-      id: nanoid(),
-      message: inputValue,
-    };
-
+    const newMessage = createChatMessage(inputValue);
     onSendMessage(newMessage);
     setInputValue('');
-    setError('');
+    setError(null);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && isInputValid && !isTyping) {
-      handleSubmit(e);
-    }
+  const onKeyPress = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    handleKeyPress(e, isInputValid, isTyping, handleSubmit);
   };
 
   return (
@@ -58,39 +44,24 @@ export default function ChatBottom({
     >
       <form
         onSubmit={handleSubmit}
-        className="flex items-center gap-2 rounded-full border-2 border-gray-300 px-4 py-2"
+        className="flex items-center gap-2 rounded-lg border-2 border-gray-300 px-4 py-2"
       >
         <ChatInput
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          onKeyPress={handleKeyPress}
+          onKeyPress={onKeyPress}
           placeholder={currentStepData.question}
           disabled={isTyping}
           type={currentStepData.inputType}
           options={currentStepData.options}
         />
-        <button
+        <Button
           type="submit"
           disabled={!isInputValid || isTyping}
-          className={`${
-            isInputValid && !isTyping ? 'text-primary hover:text-primary/80' : 'text-gray-400'
-          }`}
+          className={`${!isInputValid || isTyping ? 'cursor-not-allowed opacity-50' : ''}`}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <line x1="22" y1="2" x2="11" y2="13"></line>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-          </svg>
-        </button>
+          입력
+        </Button>
       </form>
       {!isInputValid && inputValue && currentStepData?.errorMessage && (
         <p className="mt-1 text-sm text-red-500">{currentStepData.errorMessage}</p>

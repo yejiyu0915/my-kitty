@@ -1,7 +1,7 @@
 import ChatAvatar from './bubble/ChatAvatar';
 import ChatMessage from './bubble/ChatMessage';
-import { DOCTOR_DEFAULT, PATIENT_DEFAULT } from '@/app/_components/chat/data/chatUser';
-import { ChatBubbleProps } from '@/app/_components/chat/types/chatBubble';
+import { DOCTOR_DEFAULT, PATIENT_DEFAULT } from '../data/chatUser';
+import { ChatBubbleProps } from '../types/chat';
 
 export default function ChatBubble({
   type,
