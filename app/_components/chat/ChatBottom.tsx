@@ -1,10 +1,9 @@
 'use client';
-import { useState } from 'react';
 import { chatSteps } from './data/chatSteps';
 import { ChatBottomProps } from './types/chat';
 import ChatInput from './ui/ChatInput';
 import Button from '@/components/ui/button';
-import { validateInput, createChatMessage, handleKeyPress } from './utils/chatInput';
+import { useChatInput } from './hooks/useChatInput';
 
 export default function ChatBottom({
   currentStep,
@@ -12,25 +11,12 @@ export default function ChatBottom({
   isTyping,
   animation,
 }: ChatBottomProps) {
-  const [inputValue, setInputValue] = useState('');
-  const [error, setError] = useState<string | null>(null);
   const currentStepData = chatSteps[currentStep];
-
-  const isInputValid = validateInput(inputValue, currentStepData.validation);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isInputValid || isTyping) return;
-
-    const newMessage = createChatMessage(inputValue);
-    onSendMessage(newMessage);
-    setInputValue('');
-    setError(null);
-  };
-
-  const onKeyPress = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    handleKeyPress(e, isInputValid, isTyping, handleSubmit);
-  };
+  const { inputValue, handleInputChange, isInputValid, handleSubmit, onKeyPress } = useChatInput({
+    currentStepData,
+    isTyping,
+    onSendMessage,
+  });
 
   return (
     <div
@@ -48,7 +34,7 @@ export default function ChatBottom({
       >
         <ChatInput
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={handleInputChange}
           onKeyPress={onKeyPress}
           placeholder={currentStepData.question}
           disabled={isTyping}
@@ -64,9 +50,8 @@ export default function ChatBottom({
         </Button>
       </form>
       {!isInputValid && inputValue && currentStepData?.errorMessage && (
-        <p className="mt-1 text-sm text-red-500">{currentStepData.errorMessage}</p>
+        <p className="mt-1 pl-2 text-sm text-red-500">{currentStepData.errorMessage}</p>
       )}
-      {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
     </div>
   );
 }

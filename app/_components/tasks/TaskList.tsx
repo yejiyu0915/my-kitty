@@ -1,8 +1,8 @@
 'use client';
 
 import { memo } from 'react';
-import TaskListContent from './TaskListContent';
-import TaskListHeader from './TaskListHeader';
+import TaskListContent from './layouts/TaskListContent';
+import TaskListHeader from './layouts/TaskListHeader';
 import { useTaskListState } from './utils/taskListState';
 import { useTaskListToggle } from './utils/taskListToggle';
 

@@ -1,4 +1,4 @@
-// Domain Types
+// 도메인 타입
 export interface TaskContent {
   id: string;
   text: string;
@@ -12,24 +12,28 @@ export interface TaskCategory {
   content: TaskContent[];
 }
 
-// Component Props Types
-export interface TaskListCategoryProps {
+// 공통 타입
+export type ToggleTaskHandler = (taskId: string, categoryId: string) => void;
+export type ToggleCategoryHandler = (id: string) => void;
+
+export interface CategoryProps {
   category: TaskCategory;
   categoryIndex: number;
-  toggleCategory: (index: number) => void;
-  toggleTask: (categoryIndex: number, taskIndex: number) => void;
 }
 
-export interface TaskListCategoryTitleTextProps {
-  category: TaskCategory;
-  categoryIndex: number;
+// 컴포넌트 Props 타입
+export interface TaskListCategoryProps extends CategoryProps {
+  toggleCategory: ToggleCategoryHandler;
+  toggleTask: ToggleTaskHandler;
 }
+
+export type TaskListCategoryTitleTextProps = CategoryProps;
 
 export interface TaskListContentProps {
   isOpen: boolean;
   tasks: TaskCategory[];
-  toggleCategory: (index: number) => void;
-  toggleTask: (categoryIndex: number, taskIndex: number) => void;
+  toggleCategory: ToggleCategoryHandler;
+  toggleTask: ToggleTaskHandler;
 }
 
 export interface TaskListHeaderProps {
@@ -42,7 +46,8 @@ export interface TaskListHeaderProps {
 
 export interface TaskListItemProps {
   tasks: TaskContent[];
-  toggleTask: (taskIndex: number) => void;
+  categoryId: string;
+  toggleTask: ToggleTaskHandler;
 }
 
 export interface ProgressProps {

@@ -8,7 +8,7 @@ export default function Progress({
   className = '',
   showLabel = false,
   label = '진행률',
-}: Omit<ProgressProps, 'percentage'>) {
+}: ProgressProps) {
   const percentage = Math.round((completed / total) * 100);
 
   return (

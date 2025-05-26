@@ -1,6 +1,6 @@
 import { ChatStep } from '../types/step';
-import { validateName } from '../utils/validation';
-import { formatName } from '../utils/formatter';
+import { validateName } from '../utils/chatValidation';
+import { formatName } from '../utils/chatFormatter';
 
 export const chatSteps: ChatStep[] = [
   {

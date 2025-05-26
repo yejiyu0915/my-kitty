@@ -7,14 +7,14 @@ export default function Report() {
         <div className="flex flex-col gap-2 pb-4">
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-500">진료일자:</span>
-            <span className="text-sm font-bold text-gray-700">
+            {/* <span className="text-sm font-bold text-gray-700">
               {new Date().toLocaleDateString('ko-KR', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
                 weekday: 'long',
               })}
-            </span>
+            </span> */}
           </div>
         </div>
         <h2 className="my-4 text-2xl font-bold">환자 정보</h2>

@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import type { TaskListCategoryTitleTextProps } from '@/app/_components/tasks/types/task';
 import Progress from '@/app/_components/tasks/ui/TaskProgress';
 
@@ -13,10 +13,7 @@ const CategoryNumber = memo(function CategoryNumber({ number }: { number: number
 });
 
 function TaskListCategoryTitleText({ category, categoryIndex }: TaskListCategoryTitleTextProps) {
-  const completed = useMemo(
-    () => category.content.filter((task) => task.isDone).length,
-    [category.content]
-  );
+  const completed = category.content.filter((task) => task.isDone).length;
 
   return (
     <div className="flex items-center gap-2">

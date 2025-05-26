@@ -7,22 +7,24 @@ import type { TaskCategory } from '@/app/_components/tasks/types/task';
 export function useTaskListState() {
   const [tasks, setTasks] = useState<TaskCategory[]>(taskData);
 
-  const toggleCategory = useCallback((index: number) => {
+  const toggleCategory = useCallback((id: string) => {
     setTasks((prevTasks) =>
-      prevTasks.map((taskCategory, i) =>
-        i === index ? { ...taskCategory, isOpen: !taskCategory.isOpen } : taskCategory
+      prevTasks.map((taskCategory) =>
+        taskCategory.id === id ? { ...taskCategory, isOpen: !taskCategory.isOpen } : taskCategory
       )
     );
   }, []);
 
-  const toggleTask = useCallback((categoryIndex: number, taskIndex: number) => {
+  const toggleTask = useCallback((taskId: string, categoryId: string) => {
     setTasks((prevTasks) =>
-      prevTasks.map((taskCategory, i) =>
-        i === categoryIndex
+      prevTasks.map((taskCategory) =>
+        taskCategory.id === categoryId
           ? {
               ...taskCategory,
-              content: taskCategory.content.map((taskContent, j) =>
-                j === taskIndex ? { ...taskContent, isDone: !taskContent.isDone } : taskContent
+              content: taskCategory.content.map((taskContent) =>
+                taskContent.id === taskId
+                  ? { ...taskContent, isDone: !taskContent.isDone }
+                  : taskContent
               ),
             }
           : taskCategory

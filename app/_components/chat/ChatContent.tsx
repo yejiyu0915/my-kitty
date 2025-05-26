@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import ChatBubble from './ui/ChatBubble';
 import { ChatMessage } from './types/chat';
+import { useChatScroll } from './hooks/useChatScroll';
 
 interface ChatContentProps {
   messages: ChatMessage[];
@@ -10,14 +10,10 @@ interface ChatContentProps {
 }
 
 export default function ChatContent({ messages, isWaiting }: ChatContentProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  // 새 메시지가 추가될 때 자동 스크롤
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages, isWaiting]);
+  const { scrollRef } = useChatScroll(messages, isWaiting, {
+    smooth: true,
+    threshold: 100,
+  });
 
   return (
     <div
