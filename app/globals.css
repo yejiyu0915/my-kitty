@@ -127,7 +127,7 @@
 }
 
 @tailwind base;
-@tailwind components;
+/* @tailwind components; */
 @tailwind utilities;
 
 @layer utilities {
@@ -143,4 +143,19 @@
     background-color: rgb(156 163 175);
     border-radius: 20px;
   }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
 }
