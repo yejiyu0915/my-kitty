@@ -76,7 +76,7 @@ export const chatSteps: ChatStep[] = [
     validation: (value: string) => ChatValidator.validateGender(value).isValid,
     errorMessage: '성별을 선택해주세요.',
     messageFormat: formatGender,
-    inputType: 'select',
+    inputType: 'radio',
     options: [
       { value: '남성', label: '남성' },
       { value: '여성', label: '여성' },

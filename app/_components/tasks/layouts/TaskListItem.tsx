@@ -2,7 +2,7 @@
 
 import { memo } from 'react';
 import type { TaskListItemProps } from '@/app/_components/tasks/types/task';
-import Checkbox from '@/components/ui/checkbox';
+import Checkbox from '@/components/ui/input/checkbox';
 
 const TaskCheckbox = memo(function TaskCheckbox({
   task,

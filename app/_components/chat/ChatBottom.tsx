@@ -2,7 +2,7 @@
 import { chatSteps } from './data/chatSteps';
 import { ChatBottomProps } from './types/chat';
 import ChatInput from './ui/ChatInput';
-import Button from '@/components/ui/button';
+import Button from '@/components/ui/input/button';
 import { useChatInput } from './hooks/useChatInput';
 
 export default function ChatBottom({

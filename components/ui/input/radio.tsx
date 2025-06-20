@@ -1,46 +1,70 @@
-import { useState } from 'react';
-import { RadioInputProps } from '../../types/input';
+import { useState, ChangeEvent } from 'react';
 
-export default function RadioInput({ value, onChange, disabled, options = [] }: RadioInputProps) {
+interface RadioOption {
+  value: string;
+  label: string;
+}
+
+interface RadioInputProps {
+  value: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  disabled: boolean;
+  options: RadioOption[];
+  className?: string;
+  name?: string;
+  otherOptionValue?: string;
+  otherOptionPlaceholder?: string;
+}
+
+export default function RadioInput({
+  value,
+  onChange,
+  disabled,
+  options = [],
+  className = '',
+  name = 'radio-group',
+  otherOptionValue = '기타',
+  otherOptionPlaceholder = '기타를 입력해주세요.',
+}: RadioInputProps) {
   const [otherValue, setOtherValue] = useState('');
   const [selectedOption, setSelectedOption] = useState(value || '');
 
-  const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRadioChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setSelectedOption(newValue);
 
     // 기타가 선택된 경우 기타 텍스트 값을 사용
-    const finalValue = newValue === '기타' ? otherValue : newValue;
+    const finalValue = newValue === otherOptionValue ? otherValue : newValue;
 
     // onChange 이벤트를 시뮬레이션
     const syntheticEvent = {
       target: { value: finalValue },
-    } as React.ChangeEvent<HTMLInputElement>;
+    } as ChangeEvent<HTMLInputElement>;
 
     onChange(syntheticEvent);
   };
 
-  const handleOtherChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOtherChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newOtherValue = e.target.value;
     setOtherValue(newOtherValue);
 
     // 기타가 선택된 경우에만 onChange 호출
-    if (selectedOption === '기타') {
+    if (selectedOption === otherOptionValue) {
       const syntheticEvent = {
         target: { value: newOtherValue },
-      } as React.ChangeEvent<HTMLInputElement>;
+      } as ChangeEvent<HTMLInputElement>;
 
       onChange(syntheticEvent);
     }
   };
 
   return (
-    <div className="flex-1">
-      <div className="grid grid-cols-3 gap-3">
-        {options.map((option: { value: string; label: string }) => (
+    <div className={`flex-1 ${className}`}>
+      <div className="flex gap-3">
+        {options.map((option) => (
           <label
             key={option.value}
-            className={`group hover:border-primary/30 hover:bg-primary/5 relative flex cursor-pointer items-center rounded-lg border-2 border-white p-3 transition-all duration-200 ${
+            className={`group hover:border-primary/30 hover:bg-primary/5 relative flex flex-1 cursor-pointer items-center rounded-lg border-2 border-white p-3 transition-all duration-200 ${
               selectedOption === option.value
                 ? 'border-primary bg-primary/10 shadow-xs'
                 : 'hover:shadow-xs'
@@ -49,7 +73,7 @@ export default function RadioInput({ value, onChange, disabled, options = [] }: 
             <div className="relative flex items-center">
               <input
                 type="radio"
-                name="visitPurpose"
+                name={name}
                 value={option.value}
                 checked={selectedOption === option.value}
                 onChange={handleRadioChange}
@@ -78,13 +102,13 @@ export default function RadioInput({ value, onChange, disabled, options = [] }: 
         ))}
       </div>
 
-      {selectedOption === '기타' && (
+      {selectedOption === otherOptionValue && (
         <div className="animate-in slide-in-from-left-2 mt-3 duration-300">
           <input
             type="text"
             value={otherValue}
             onChange={handleOtherChange}
-            placeholder="기타 방문 목적을 입력해주세요."
+            placeholder={otherOptionPlaceholder}
             disabled={disabled}
             className="focus:border-primary focus:ring-primary/20 w-full rounded-lg border-2 border-gray-200 px-4 py-3 text-sm transition-all duration-200 placeholder:text-gray-400 hover:border-gray-300 focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           />

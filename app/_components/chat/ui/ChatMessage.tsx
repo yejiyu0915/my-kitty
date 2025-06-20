@@ -1,4 +1,4 @@
-import { ChatMessageProps } from '../../types/chat';
+import { ChatMessageProps } from '../types/chat';
 
 export default function ChatMessage({ message, isDoctor, className }: ChatMessageProps) {
   return (

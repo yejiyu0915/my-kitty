@@ -1,5 +1,5 @@
-import ChatAvatar from './bubble/ChatAvatar';
-import ChatMessage from './bubble/ChatMessage';
+import ChatAvatar from './ChatAvatar';
+import ChatMessage from './ChatMessage';
 import { DOCTOR_DEFAULT, PATIENT_DEFAULT } from '../data/chatUser';
 import { ChatBubbleProps } from '../types/chat';
 

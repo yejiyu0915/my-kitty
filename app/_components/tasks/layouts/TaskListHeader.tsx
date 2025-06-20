@@ -1,7 +1,7 @@
 'use client';
 
 import type { TaskListHeaderProps } from '@/app/_components/tasks/types/task';
-import Button from '@/components/ui/button';
+import Button from '@/components/ui/input/button';
 import Progress from '@/app/_components/tasks/ui/TaskProgress';
 
 export default function TaskListHeader({ toggleList, totalStats }: TaskListHeaderProps) {
