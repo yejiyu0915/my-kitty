@@ -1,11 +1,5 @@
 import { ReactNode } from 'react';
-
-// 채팅 메시지 타입
-export type ChatMessage = {
-  id: string;
-  message: string;
-  type?: 'doctor' | 'patient';
-};
+import { ChatMessage, ChatState, UserData, PartialUserData } from '../schemas/chatSchemas';
 
 // 채팅 버블 컴포넌트 Props
 export interface ChatBubbleProps {
@@ -29,14 +23,6 @@ export interface ChatAvatarProps {
   isDoctor: boolean;
 }
 
-// 채팅 상태 타입
-export interface ChatState {
-  messages: ChatMessage[];
-  currentStep: number;
-  isWaiting: boolean;
-  showInput: boolean;
-}
-
 // 채팅 하단 컴포넌트 Props
 export interface ChatBottomProps {
   currentStep: number;
@@ -44,3 +30,12 @@ export interface ChatBottomProps {
   isTyping: boolean;
   showInput?: boolean;
 }
+
+// 채팅 콘텐츠 컴포넌트 Props
+export interface ChatContentProps {
+  messages: ChatMessage[];
+  isWaiting: boolean;
+}
+
+// 타입 재export (기존 코드와의 호환성을 위해)
+export type { ChatMessage, ChatState, UserData, PartialUserData };

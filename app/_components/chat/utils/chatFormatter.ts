@@ -1,3 +1,15 @@
+import {
+  differenceInYears,
+  parseISO,
+  format,
+  isValid,
+  isAfter,
+  isBefore,
+  startOfDay,
+  endOfDay,
+} from 'date-fns';
+import { ko } from 'date-fns/locale';
+
 export const formatName = (value: string): string => {
   return `${value}입니다.`;
 };
@@ -6,30 +18,29 @@ export const formatName = (value: string): string => {
 export const formatBirthDate = (value: string): string => {
   if (!value) return '';
 
-  const date = new Date(value);
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  try {
+    const date = parseISO(value);
+    if (!isValid(date)) return '';
 
-  return `${year}년 ${month}월 ${day}일입니다.`;
+    return format(date, 'yyyy년 M월 d일입니다.', { locale: ko });
+  } catch {
+    return '';
+  }
 };
 
 // 만 나이 계산 및 포맷팅
 export const formatAge = (birthDate: string): string => {
   if (!birthDate) return '';
 
-  const today = new Date();
-  const birth = new Date(birthDate);
+  try {
+    const birth = parseISO(birthDate);
+    if (!isValid(birth)) return '';
 
-  let age = today.getFullYear() - birth.getFullYear();
-  const monthDiff = today.getMonth() - birth.getMonth();
-
-  // 생일이 지나지 않았으면 1살 빼기
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-    age--;
+    const age = differenceInYears(new Date(), birth);
+    return `만 ${age}세시군요.`;
+  } catch {
+    return '';
   }
-
-  return `만 ${age}세시군요.`;
 };
 
 // 성별 포맷팅
@@ -58,12 +69,55 @@ export const formatContact = (value: string): string => {
 export const formatVisitDateTime = (value: string): string => {
   if (!value) return '';
 
-  const date = new Date(value);
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const hours = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
+  try {
+    const date = parseISO(value);
+    if (!isValid(date)) return '';
 
-  return `${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분입니다.`;
+    return format(date, 'yyyy년 M월 d일 HH시 mm분입니다.', { locale: ko });
+  } catch {
+    return '';
+  }
+};
+
+// 날짜 유효성 검사 헬퍼 함수
+export const isValidDateRange = (date: string, minDate?: Date, maxDate?: Date): boolean => {
+  try {
+    const parsedDate = parseISO(date);
+    if (!isValid(parsedDate)) return false;
+
+    if (minDate && isBefore(parsedDate, startOfDay(minDate))) return false;
+    if (maxDate && isAfter(parsedDate, endOfDay(maxDate))) return false;
+
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+// 방문 시간 유효성 검사
+export const isValidVisitTime = (dateTime: string): boolean => {
+  try {
+    const date = parseISO(dateTime);
+    if (!isValid(date)) return false;
+
+    const now = new Date();
+
+    // 현재 시간 이후
+    if (date <= now) return false;
+
+    // 일요일 제외 (0 = 일요일)
+    if (date.getDay() === 0) return false;
+
+    // 9:00 ~ 18:00 시간대
+    const hours = date.getHours();
+    if (hours < 9 || hours >= 18) return false;
+
+    // 30분 단위
+    const minutes = date.getMinutes();
+    if (minutes !== 0 && minutes !== 30) return false;
+
+    return true;
+  } catch {
+    return false;
+  }
 };

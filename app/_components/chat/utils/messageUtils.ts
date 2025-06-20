@@ -1,6 +1,7 @@
 import { ChatMessage } from '../types/chat';
 import { chatSteps } from '../data/chatSteps';
 import { nanoid } from 'nanoid';
+import { z } from 'zod';
 
 /**
  * 원장 메시지 생성
@@ -62,3 +63,63 @@ export const formatMessage = (message: ChatMessage, currentStep: number): ChatMe
 
   return message;
 };
+
+// 사용자 입력 데이터 스키마
+export const UserDataSchema = z.object({
+  name: z
+    .string()
+    .min(2, '2글자 이상 입력해주세요')
+    .regex(/^[가-힣a-zA-Z]+$/, '한글 또는 영문만 입력 가능합니다'),
+  symptoms: z.string().min(1, '증상을 입력해주세요'),
+  painLevel: z.enum([
+    '매우 심합니다.',
+    '심합니다.',
+    '보통입니다.',
+    '약간 아픕니다.',
+    '엄청 아프진 않아요.',
+  ]),
+  birthDate: z.string().refine((val) => {
+    const date = new Date(val);
+    const minDate = new Date('1900-01-01');
+    const maxDate = new Date();
+    return date >= minDate && date <= maxDate;
+  }, '올바른 생년월일을 선택해주세요'),
+  gender: z.enum(['남성', '여성']),
+  visitReason: z.enum([
+    '인터넷 검색으로 알아보고 왔습니다.',
+    '지인 소개로 알아보고 왔습니다.',
+    '광고/홍보물로 알아보고 왔습니다.',
+  ]),
+  contact: z.string().regex(/^\d{10,11}$/, '올바른 전화번호를 입력해주세요'),
+  visitDateTime: z.string().refine((val) => {
+    const date = new Date(val);
+    const now = new Date();
+    return (
+      date > now &&
+      date.getDay() !== 0 &&
+      date.getHours() >= 9 &&
+      date.getHours() < 18 &&
+      (date.getMinutes() === 0 || date.getMinutes() === 30)
+    );
+  }, '일요일을 제외하고, 9:00~18:00 사이의 30분 단위 시간을 선택해주세요'),
+});
+
+export type UserData = z.infer<typeof UserDataSchema>;
+
+// 채팅 단계 스키마
+export const ChatStepSchema = z.object({
+  id: z.string(),
+  type: z.enum(['question', 'message']),
+  question: z.string().optional(),
+  message: z.string().optional(),
+  placeholder: z.string().optional(),
+  validation: z.function().optional(),
+  errorMessage: z.string().optional(),
+  messageFormat: z.function().optional(),
+  inputType: z
+    .enum(['text', 'textarea', 'select', 'date', 'datetime-local', 'radio', 'number'])
+    .optional(),
+  options: z.array(z.object({ value: z.string(), label: z.string() })).optional(),
+});
+
+export type ChatStep = z.infer<typeof ChatStepSchema>;

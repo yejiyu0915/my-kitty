@@ -1,12 +1,6 @@
 import { nanoid } from 'nanoid';
-import { ChatStep } from '../types/step';
-import {
-  validateName,
-  validateBirthDate,
-  validateGender,
-  validateContact,
-  validateVisitDateTime,
-} from '../utils/chatValidation';
+import { ChatStep } from '../schemas/chatSchemas';
+import { ChatValidator } from '../utils/chatValidator';
 import {
   formatName,
   formatBirthDate,
@@ -21,7 +15,7 @@ export const chatSteps: ChatStep[] = [
     type: 'question',
     question: '안녕하세요, 고양이 병원입니다. 환자분 성함이 어떻게 되세요?',
     placeholder: '성함을 입력해주세요.',
-    validation: validateName,
+    validation: (value: string) => ChatValidator.validateName(value).isValid,
     errorMessage: '2글자 이상의 한글 또는 영문으로 입력해주세요.',
     messageFormat: formatName,
     inputType: 'text',
@@ -64,7 +58,7 @@ export const chatSteps: ChatStep[] = [
     type: 'question',
     question: '생년월일이 어떻게 되시나요?',
     placeholder: '생년월일을 선택해주세요.',
-    validation: validateBirthDate,
+    validation: (value: string) => ChatValidator.validateBirthDate(value).isValid,
     errorMessage: '올바른 생년월일을 선택해주세요.',
     messageFormat: formatBirthDate,
     inputType: 'date',
@@ -79,7 +73,7 @@ export const chatSteps: ChatStep[] = [
     type: 'question',
     question: '성별은 어떻게 되세요?',
     placeholder: '성별을 선택해주세요.',
-    validation: validateGender,
+    validation: (value: string) => ChatValidator.validateGender(value).isValid,
     errorMessage: '성별을 선택해주세요.',
     messageFormat: formatGender,
     inputType: 'select',
@@ -106,7 +100,7 @@ export const chatSteps: ChatStep[] = [
     type: 'question',
     question: '연락처 한 번 적어주시겠어요?',
     placeholder: '연락처를 입력해주세요. (숫자만)',
-    validation: validateContact,
+    validation: (value: string) => ChatValidator.validateContact(value).isValid,
     errorMessage: '올바른 전화번호를 입력해주세요.',
     messageFormat: formatContact,
     inputType: 'number',
@@ -121,7 +115,7 @@ export const chatSteps: ChatStep[] = [
     type: 'question',
     question: '방문 원하는 날짜와 시간을 알려주시겠어요?',
     placeholder: '방문 날짜와 시간을 선택해주세요. (일요일 제외, 9:00~18:00, 30분 단위)',
-    validation: validateVisitDateTime,
+    validation: (value: string) => ChatValidator.validateVisitDateTime(value).isValid,
     errorMessage: '일요일을 제외하고, 9:00~18:00 사이의 30분 단위 시간을 선택해주세요.',
     messageFormat: formatVisitDateTime,
     inputType: 'datetime-local',

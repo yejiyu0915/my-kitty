@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { ChatMessage } from '../types/chat';
 import { validateInput, createChatMessage } from '../utils/messageUtils';
-import { ChatStep } from '../types/step';
+import { ChatStep } from '../schemas/chatSchemas';
 
 interface UseChatInputProps {
   currentStepData: ChatStep;

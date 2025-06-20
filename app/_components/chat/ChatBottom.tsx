@@ -46,6 +46,8 @@ export default function ChatBottom({
           입력
         </Button>
       </form>
+
+      {/* 에러 메시지 표시 */}
       {!isInputValid && inputValue && currentStepData?.errorMessage && (
         <p className="absolute bottom-2 left-8 mt-1 pl-2 text-sm text-red-500">
           {currentStepData.errorMessage}
