@@ -10,10 +10,8 @@
  * @param isWaiting - 메시지 대기 중 여부
  * @param options - 스크롤 동작 옵션 (부드러운 스크롤, 임계값 등)
  */
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { ChatMessage } from '../types/chat';
-import { useScrollPosition } from './scroll/useScrollPosition';
-import { useScrollBehavior } from './scroll/useScrollBehavior';
 
 interface UseChatScrollOptions {
   smooth?: boolean;
@@ -27,14 +25,43 @@ export function useChatScroll(
 ) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const lastScrollHeight = useRef<number>(0);
+  const { threshold = 100, smooth = true } = options;
+  const [isNearBottom, setIsNearBottom] = useState(true);
 
-  const { isNearBottom } = useScrollPosition(scrollRef, {
-    threshold: options.threshold,
-  });
+  // 스크롤 위치 감지
+  const isNearBottomOfScroll = useCallback(() => {
+    if (!scrollRef.current) return true;
 
-  const { scrollToBottom } = useScrollBehavior(scrollRef, {
-    smooth: options.smooth,
-  });
+    const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+    const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+    return distanceFromBottom <= threshold;
+  }, [threshold]);
+
+  // 스크롤 이벤트 리스너
+  useEffect(() => {
+    const element = scrollRef.current;
+    if (!element) return;
+
+    const handleScroll = () => {
+      setIsNearBottom(isNearBottomOfScroll());
+    };
+
+    element.addEventListener('scroll', handleScroll);
+    return () => element.removeEventListener('scroll', handleScroll);
+  }, [isNearBottomOfScroll]);
+
+  // 스크롤 다운 함수
+  const scrollToBottom = useCallback(
+    (behavior: ScrollBehavior = smooth ? 'smooth' : 'auto') => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollTo({
+          top: scrollRef.current.scrollHeight,
+          behavior,
+        });
+      }
+    },
+    [smooth]
+  );
 
   // 메시지 변경 시 스크롤 처리
   useEffect(() => {

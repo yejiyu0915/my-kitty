@@ -1,8 +1,23 @@
 import { ChatState } from '../types/chat';
-import { createDoctorMessage, replaceNamePlaceholder } from './messageUtils';
 import { TIMING } from './timingUtils';
 import { getNextStep, getStepData } from './stepUtils';
 import { formatAge } from '../utils/chatFormatter';
+import { nanoid } from 'nanoid';
+
+// 원장 메시지 생성
+const createDoctorMessage = (message: string) => ({
+  id: nanoid(),
+  message,
+  type: 'doctor' as const,
+});
+
+// {name} 플레이스홀더 치환
+const replaceNamePlaceholder = (text: string, userName: string): string => {
+  if (text.includes('{name}')) {
+    return text.replace('{name}', userName);
+  }
+  return text;
+};
 
 /**
  * 메시지 처리 로직을 담당하는 클래스

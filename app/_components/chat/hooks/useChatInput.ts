@@ -1,13 +1,25 @@
 import { useState, useCallback, useMemo } from 'react';
 import { ChatMessage } from '../types/chat';
-import { validateInput, createChatMessage } from '../utils/messageUtils';
 import { ChatStep } from '../schemas/chatSchemas';
+import { nanoid } from 'nanoid';
 
 interface UseChatInputProps {
   currentStepData: ChatStep;
   isTyping: boolean;
   onSendMessage: (message: ChatMessage) => void;
 }
+
+// 입력값 유효성 검사
+const validateInput = (value: string, validation?: (value: string) => boolean): boolean => {
+  if (!validation) return true;
+  return validation(value);
+};
+
+// 채팅 메시지 생성
+const createChatMessage = (message: string): ChatMessage => ({
+  id: nanoid(),
+  message,
+});
 
 export function useChatInput({ currentStepData, isTyping, onSendMessage }: UseChatInputProps) {
   const [inputValue, setInputValue] = useState('');
