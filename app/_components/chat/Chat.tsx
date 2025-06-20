@@ -20,7 +20,7 @@ export default function Chat() {
         currentStep={chatState.currentStep}
         onSendMessage={handleSendMessage}
         isTyping={chatState.isWaiting}
-        animation={chatState.chatBottomAnimation}
+        showInput={chatState.showInput}
       />
     </div>
   );

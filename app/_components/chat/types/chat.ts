@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 export type ChatMessage = {
   id: string;
   message: string;
+  type?: 'doctor' | 'patient';
 };
 
 // 채팅 버블 컴포넌트 Props
@@ -33,7 +34,7 @@ export interface ChatState {
   messages: ChatMessage[];
   currentStep: number;
   isWaiting: boolean;
-  chatBottomAnimation: 'slide-up-bottom' | 'slide-down';
+  showInput: boolean;
 }
 
 // 채팅 하단 컴포넌트 Props
@@ -41,5 +42,5 @@ export interface ChatBottomProps {
   currentStep: number;
   onSendMessage: (message: ChatMessage) => void;
   isTyping: boolean;
-  animation: 'slide-up-bottom' | 'slide-down';
+  showInput?: boolean;
 }

@@ -9,7 +9,7 @@ export default function ChatBottom({
   currentStep,
   onSendMessage,
   isTyping,
-  animation,
+  showInput = true,
 }: ChatBottomProps) {
   const currentStepData = chatSteps[currentStep];
   const { inputValue, handleInputChange, isInputValid, handleSubmit, onKeyPress } = useChatInput({
@@ -18,16 +18,13 @@ export default function ChatBottom({
     onSendMessage,
   });
 
+  // message 타입이거나 showInput이 false일 때는 input을 숨김
+  if (currentStepData.type === 'message' || !showInput) {
+    return null;
+  }
+
   return (
-    <div
-      className={`absolute right-0 bottom-0 left-0 w-full bg-white p-4 px-8 ${
-        animation === 'slide-up-bottom' ? 'animate-slide-up-bottom' : 'animate-slide-down'
-      }`}
-      style={{
-        transform: animation === 'slide-up-bottom' ? 'translateY(0)' : 'translateY(100%)',
-        transition: 'transform 0.3s ease-out',
-      }}
-    >
+    <div className="absolute right-0 bottom-0 left-0 w-full bg-white p-8">
       <form
         onSubmit={handleSubmit}
         className="flex items-center gap-2 rounded-lg border-2 border-gray-300 px-4 py-2"
@@ -36,7 +33,7 @@ export default function ChatBottom({
           value={inputValue}
           onChange={handleInputChange}
           onKeyPress={onKeyPress}
-          placeholder={currentStepData.question}
+          placeholder={currentStepData.placeholder || ''}
           disabled={isTyping}
           type={currentStepData.inputType}
           options={currentStepData.options}
@@ -50,7 +47,9 @@ export default function ChatBottom({
         </Button>
       </form>
       {!isInputValid && inputValue && currentStepData?.errorMessage && (
-        <p className="mt-1 pl-2 text-sm text-red-500">{currentStepData.errorMessage}</p>
+        <p className="absolute bottom-2 left-8 mt-1 pl-2 text-sm text-red-500">
+          {currentStepData.errorMessage}
+        </p>
       )}
     </div>
   );

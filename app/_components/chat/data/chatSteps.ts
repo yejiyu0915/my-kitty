@@ -1,11 +1,41 @@
 import { ChatStep } from '../types/step';
-import { validateName } from '../utils/chatValidation';
-import { formatName } from '../utils/chatFormatter';
+import {
+  validateName,
+  validateBirthDate,
+  validateGender,
+  validateContact,
+  validateVisitDateTime,
+} from '../utils/chatValidation';
+import {
+  formatName,
+  formatBirthDate,
+  formatGender,
+  formatVisitDateTime,
+} from '../utils/chatFormatter';
+
+// 연락처 포맷팅 함수 (숫자에 하이픈 추가)
+const formatContact = (value: string): string => {
+  if (!value) return '';
+
+  // 숫자만 추출
+  const numbers = value.replace(/\D/g, '');
+
+  // 전화번호 형식으로 변환 (010-1234-5678)
+  if (numbers.length === 11) {
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7)}입니다.`;
+  } else if (numbers.length === 10) {
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 6)}-${numbers.slice(6)}입니다.`;
+  }
+
+  return `${value}입니다.`;
+};
 
 export const chatSteps: ChatStep[] = [
   {
     id: 0,
-    question: '성함을 입력해주세요.',
+    type: 'question',
+    question: '안녕하세요, 고양이 병원입니다. 환자분 성함이 어떻게 되세요?',
+    placeholder: '성함을 입력해주세요.',
     validation: validateName,
     errorMessage: '2글자 이상의 한글 또는 영문으로 입력해주세요.',
     messageFormat: formatName,
@@ -13,21 +43,107 @@ export const chatSteps: ChatStep[] = [
   },
   {
     id: 1,
-    question: '아픈 곳을 알려주세요.',
+    type: 'question',
+    question: '네, {name}님 안녕하세요. 어디가 아파서 오셨나요?',
+    placeholder: '아픈 곳을 알려주세요.',
     messageFormat: (value: string) => value,
     inputType: 'textarea',
   },
   {
     id: 2,
-    question: '증상의 강도를 선택해주세요.',
+    type: 'question',
+    question: '어느 정도로 아프다고 느끼시나요?',
+    placeholder: '증상의 강도를 선택해주세요.',
     messageFormat: (value: string) => value,
     inputType: 'select',
     options: [
-      { value: '엄청 아프진 않아요.', label: '매우 약함' },
-      { value: '약간 아픕니다.', label: '약함' },
-      { value: '보통입니다.', label: '보통' },
-      { value: '심합니다.', label: '심함' },
       { value: '매우 심합니다.', label: '매우 심함' },
+      { value: '심합니다.', label: '심함' },
+      { value: '보통입니다.', label: '보통' },
+      { value: '약간 아픕니다.', label: '약함' },
+      { value: '엄청 아프진 않아요.', label: '매우 약함' },
     ],
+  },
+  {
+    id: 3,
+    type: 'message',
+    message: '아이고, 그러셨군요. 네 알겠습니다.',
+  },
+  {
+    id: 4,
+    type: 'message',
+    message: '예약에 앞서 환자분 정보 한 번 확인하겠습니다.',
+  },
+  {
+    id: 5,
+    type: 'question',
+    question: '생년월일이 어떻게 되시나요?',
+    placeholder: '생년월일을 선택해주세요.',
+    validation: validateBirthDate,
+    errorMessage: '올바른 생년월일을 선택해주세요.',
+    messageFormat: formatBirthDate,
+    inputType: 'date',
+  },
+  {
+    id: 6,
+    type: 'message',
+    message: '만 31세시군요.', // 동적으로 계산됨 (chatMessageHandler에서 formatAge 사용)
+  },
+  {
+    id: 7,
+    type: 'question',
+    question: '성별은 어떻게 되세요?',
+    placeholder: '성별을 선택해주세요.',
+    validation: validateGender,
+    errorMessage: '성별을 선택해주세요.',
+    messageFormat: formatGender,
+    inputType: 'select',
+    options: [
+      { value: '남성', label: '남성' },
+      { value: '여성', label: '여성' },
+    ],
+  },
+  {
+    id: 8,
+    type: 'question',
+    question: '어떻게 방문하게 되셨나요?',
+    placeholder: '방문 경위를 선택해주세요.',
+    messageFormat: (value: string) => value,
+    inputType: 'radio',
+    options: [
+      { value: '인터넷 검색으로 알아보고 왔습니다.', label: '인터넷 검색' },
+      { value: '지인 소개로 알아보고 왔습니다.', label: '지인 소개' },
+      { value: '광고/홍보물로 알아보고 왔습니다.', label: '광고/홍보물' },
+    ],
+  },
+  {
+    id: 9,
+    type: 'question',
+    question: '연락처 한 번 적어주시겠어요?',
+    placeholder: '연락처를 입력해주세요. (숫자만)',
+    validation: validateContact,
+    errorMessage: '올바른 전화번호를 입력해주세요.',
+    messageFormat: formatContact,
+    inputType: 'number',
+  },
+  {
+    id: 10,
+    type: 'message',
+    message: '네 소중한 정보 감사합니다.',
+  },
+  {
+    id: 11,
+    type: 'question',
+    question: '방문 원하는 날짜와 시간을 알려주시겠어요?',
+    placeholder: '방문 날짜와 시간을 선택해주세요. (일요일 제외, 9:00~18:00, 30분 단위)',
+    validation: validateVisitDateTime,
+    errorMessage: '일요일을 제외하고, 9:00~18:00 사이의 30분 단위 시간을 선택해주세요.',
+    messageFormat: formatVisitDateTime,
+    inputType: 'datetime-local',
+  },
+  {
+    id: 12,
+    type: 'message',
+    message: '네 가능할 것 같습니다. 예약 변동사항이 있다면 연락주세요.',
   },
 ];
