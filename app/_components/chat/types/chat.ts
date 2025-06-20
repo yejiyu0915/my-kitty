@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { ChatMessage } from '../schemas/chatSchemas';
+import { ChatMessage } from '../data/chatSchemas';
 
 // 채팅 버블 컴포넌트 Props
 export interface ChatBubbleProps {

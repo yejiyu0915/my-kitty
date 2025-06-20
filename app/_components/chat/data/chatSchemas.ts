@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { CHAT_STEP_DOMAINS } from './chatDomains';
 
 // 사용자 입력 데이터 스키마
 export const UserDataSchema = z.object({
@@ -64,10 +65,14 @@ export const UserDataSchema = z.object({
   }, '일요일을 제외하고, 9:00~18:00 사이의 30분 단위 시간을 선택해주세요'),
 });
 
+// 도메인 스키마 (chatDomains에서 import)
+export const ChatStepDomainSchema = z.enum(CHAT_STEP_DOMAINS);
+
 // 채팅 단계 스키마
 export const ChatStepSchema = z.object({
   id: z.string(),
   type: z.enum(['question', 'message']),
+  domain: ChatStepDomainSchema, // 도메인 추가
   question: z.string().optional(),
   message: z.string().optional(),
   placeholder: z.string().optional(),

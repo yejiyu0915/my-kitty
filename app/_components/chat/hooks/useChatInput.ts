@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo } from 'react';
 import { ChatMessage } from '../types/chat';
-import { ChatStep } from '../schemas/chatSchemas';
+import { ChatStep } from '../data/chatSchemas';
 import { nanoid } from 'nanoid';
 
 interface UseChatInputProps {

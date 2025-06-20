@@ -1,7 +1,7 @@
-import { ChatState } from '../types/chat';
+import { ChatState } from '../data/chatSchemas';
 import { TIMING } from './timingUtils';
 import { getNextStep, getStepData } from './stepUtils';
-import { formatAge } from '../utils/chatFormatter';
+import { formatAge } from './chatFormatter';
 import { nanoid } from 'nanoid';
 
 // 원장 메시지 생성
@@ -46,9 +46,9 @@ export class MessageProcessor {
       }));
 
       setTimeout(() => {
-        // 6번째 단계(만 나이)인 경우 동적으로 나이 계산
+        // age_calculation 도메인인 경우 동적으로 나이 계산
         let messageText = nextStepData.message!;
-        if (nextStep === 6) {
+        if (nextStepData.domain === 'age_calculation') {
           messageText = formatAge(userMessage);
         }
 

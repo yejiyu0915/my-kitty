@@ -1,24 +1,33 @@
 import { z } from 'zod';
-import { UserDataSchema, UserData, PartialUserData } from '../schemas/chatSchemas';
+import { UserDataSchema, UserData, PartialUserData } from '../data/chatSchemas';
+import { ChatStepDomain, CHAT_STEP_DOMAINS } from '../data/chatDomains';
 import { isValidDateRange, isValidVisitTime } from './chatFormatter';
 
+/**
+ * 채팅 입력 유효성 검사 클래스
+ *
+ * 각 도메인별 유효성 검사 로직을 중앙에서 관리합니다.
+ */
 export class ChatValidator {
   /**
-   * 단계별 유효성 검사 (통합 함수)
+   * 도메인별 유효성 검사
    */
-  static validateByStep(step: number, value: string): { isValid: boolean; error?: string } {
+  static validateByDomain(
+    domain: ChatStepDomain,
+    value: string
+  ): { isValid: boolean; error?: string } {
     try {
-      switch (step) {
-        case 0: // 이름
+      switch (domain) {
+        case 'greeting': // 이름
           UserDataSchema.shape.name.parse(value);
           break;
-        case 1: // 증상
+        case 'symptoms': // 증상
           UserDataSchema.shape.symptoms.parse(value);
           break;
-        case 2: // 통증 강도
+        case 'pain_level': // 통증 강도
           UserDataSchema.shape.painLevel.parse(value);
           break;
-        case 5: {
+        case 'birth_date': {
           // 생년월일
           UserDataSchema.shape.birthDate.parse(value);
           // date-fns를 활용한 추가 검증
@@ -29,16 +38,16 @@ export class ChatValidator {
           }
           break;
         }
-        case 7: // 성별
+        case 'gender': // 성별
           UserDataSchema.shape.gender.parse(value);
           break;
-        case 8: // 방문 경위
+        case 'visit_reason': // 방문 경위
           UserDataSchema.shape.visitReason.parse(value);
           break;
-        case 9: // 연락처
+        case 'contact': // 연락처
           UserDataSchema.shape.contact.parse(value);
           break;
-        case 11: {
+        case 'appointment': {
           // 방문 날짜/시간
           UserDataSchema.shape.visitDateTime.parse(value);
           // date-fns를 활용한 추가 검증
@@ -51,7 +60,7 @@ export class ChatValidator {
           break;
         }
         default:
-          return { isValid: true }; // 유효성 검사가 필요 없는 단계
+          return { isValid: true }; // 유효성 검사가 필요 없는 도메인
       }
       return { isValid: true };
     } catch (error) {
@@ -60,6 +69,17 @@ export class ChatValidator {
       }
       return { isValid: false, error: '알 수 없는 오류가 발생했습니다' };
     }
+  }
+
+  /**
+   * 단계별 유효성 검사 (기존 호환성을 위해 유지)
+   */
+  static validateByStep(step: number, value: string): { isValid: boolean; error?: string } {
+    const domain = CHAT_STEP_DOMAINS[step];
+    if (!domain) {
+      return { isValid: true }; // 유효성 검사가 필요 없는 단계
+    }
+    return this.validateByDomain(domain, value);
   }
 
   /**

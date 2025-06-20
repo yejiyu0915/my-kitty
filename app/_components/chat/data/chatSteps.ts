@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';
-import { ChatStep } from '../schemas/chatSchemas';
+import { ChatStep } from './chatSchemas';
 import { ChatValidator } from '../utils/chatValidator';
+import { CHAT_STEP_DOMAINS } from './chatDomains';
 import {
   formatName,
   formatBirthDate,
@@ -13,6 +14,7 @@ export const chatSteps: ChatStep[] = [
   {
     id: nanoid(),
     type: 'question',
+    domain: CHAT_STEP_DOMAINS[0],
     question: '안녕하세요, 고양이 병원입니다. 환자분 성함이 어떻게 되세요?',
     placeholder: '성함을 입력해주세요.',
     validation: (value: string) => ChatValidator.validateByStep(0, value).isValid,
@@ -23,6 +25,7 @@ export const chatSteps: ChatStep[] = [
   {
     id: nanoid(),
     type: 'question',
+    domain: CHAT_STEP_DOMAINS[1],
     question: '네, {name}님 안녕하세요. 어디가 아파서 오셨나요?',
     placeholder: '아픈 곳을 알려주세요.',
     messageFormat: (value: string) => value,
@@ -31,6 +34,7 @@ export const chatSteps: ChatStep[] = [
   {
     id: nanoid(),
     type: 'question',
+    domain: CHAT_STEP_DOMAINS[2],
     question: '어느 정도로 아프다고 느끼시나요?',
     placeholder: '증상의 강도를 선택해주세요.',
     messageFormat: (value: string) => value,
@@ -46,16 +50,19 @@ export const chatSteps: ChatStep[] = [
   {
     id: nanoid(),
     type: 'message',
+    domain: CHAT_STEP_DOMAINS[3],
     message: '아이고, 그러셨군요. 네 알겠습니다.',
   },
   {
     id: nanoid(),
     type: 'message',
+    domain: CHAT_STEP_DOMAINS[4],
     message: '예약에 앞서 환자분 정보 한 번 확인하겠습니다.',
   },
   {
     id: nanoid(),
     type: 'question',
+    domain: CHAT_STEP_DOMAINS[5],
     question: '생년월일이 어떻게 되시나요?',
     placeholder: '생년월일을 선택해주세요.',
     validation: (value: string) => ChatValidator.validateByStep(5, value).isValid,
@@ -66,11 +73,13 @@ export const chatSteps: ChatStep[] = [
   {
     id: nanoid(),
     type: 'message',
-    message: '만 31세시군요.', // 동적으로 계산됨 (chatMessageHandler에서 formatAge 사용)
+    domain: CHAT_STEP_DOMAINS[6],
+    message: '만 31세시군요.',
   },
   {
     id: nanoid(),
     type: 'question',
+    domain: CHAT_STEP_DOMAINS[7],
     question: '성별은 어떻게 되세요?',
     placeholder: '성별을 선택해주세요.',
     validation: (value: string) => ChatValidator.validateByStep(7, value).isValid,
@@ -85,6 +94,7 @@ export const chatSteps: ChatStep[] = [
   {
     id: nanoid(),
     type: 'question',
+    domain: CHAT_STEP_DOMAINS[8],
     question: '어떻게 방문하게 되셨나요?',
     placeholder: '방문 경위를 선택해주세요.',
     messageFormat: (value: string) => value,
@@ -98,6 +108,7 @@ export const chatSteps: ChatStep[] = [
   {
     id: nanoid(),
     type: 'question',
+    domain: CHAT_STEP_DOMAINS[9],
     question: '연락처 한 번 적어주시겠어요?',
     placeholder: '연락처를 입력해주세요. (숫자만)',
     validation: (value: string) => ChatValidator.validateByStep(9, value).isValid,
@@ -108,11 +119,13 @@ export const chatSteps: ChatStep[] = [
   {
     id: nanoid(),
     type: 'message',
+    domain: CHAT_STEP_DOMAINS[10],
     message: '네 소중한 정보 감사합니다.',
   },
   {
     id: nanoid(),
     type: 'question',
+    domain: CHAT_STEP_DOMAINS[11],
     question: '방문 원하는 날짜와 시간을 알려주시겠어요?',
     placeholder: '방문 날짜와 시간을 선택해주세요. (일요일 제외, 9:00~18:00, 30분 단위)',
     validation: (value: string) => ChatValidator.validateByStep(11, value).isValid,
@@ -123,6 +136,13 @@ export const chatSteps: ChatStep[] = [
   {
     id: nanoid(),
     type: 'message',
-    message: '네 가능할 것 같습니다. 예약 변동사항이 있다면 연락주세요.',
+    domain: CHAT_STEP_DOMAINS[12],
+    message: '네 그럼 그 시간에 뵙겠습니다.',
+  },
+  {
+    id: nanoid(),
+    type: 'message',
+    domain: CHAT_STEP_DOMAINS[13],
+    message: '예약 변동사항이 있다면 연락주세요.',
   },
 ];
