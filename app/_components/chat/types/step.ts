@@ -1,6 +1,6 @@
 // 대화 단계 타입
 export type ChatStep = {
-  id: number;
+  id: string;
   // 원장님이 물어보는 메시지 (input이 나타나는 경우)
   question?: string;
   // 원장님이 답변을 받지 않고 이어서 말하는 메시지

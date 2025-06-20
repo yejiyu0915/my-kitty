@@ -37,6 +37,23 @@ export const formatGender = (value: string): string => {
   return `${value}입니다.`;
 };
 
+// 연락처 포맷팅 (숫자에 하이픈 추가)
+export const formatContact = (value: string): string => {
+  if (!value) return '';
+
+  // 숫자만 추출
+  const numbers = value.replace(/\D/g, '');
+
+  // 전화번호 형식으로 변환 (010-1234-5678)
+  if (numbers.length === 11) {
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7)}입니다.`;
+  } else if (numbers.length === 10) {
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 6)}-${numbers.slice(6)}입니다.`;
+  }
+
+  return `${value}입니다.`;
+};
+
 // 방문 날짜/시간 포맷팅
 export const formatVisitDateTime = (value: string): string => {
   if (!value) return '';
