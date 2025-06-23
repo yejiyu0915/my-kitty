@@ -11,7 +11,7 @@ function TaskList() {
   const { tasks, totalStats, toggleCategory, toggleTask } = useTaskListState();
 
   return (
-    <aside className="fixed top-8 left-8 z-10">
+    <aside className={`fixed top-8 left-8 ${isOpen ? 'z-10' : ''}`}>
       <TaskListHeader toggleList={toggleList} totalStats={totalStats} />
       <TaskListContent
         isOpen={isOpen}

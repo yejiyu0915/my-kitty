@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import { ChatMessage, ChatState } from '../types/chat';
+import { ChatMessage, ChatState } from '../data/chatSchemas';
 import { getNextStep, getStepData } from './stepUtils';
-import { MessageProcessor } from './messageProcessor';
+import { processMessageStep, processQuestionStep } from './message/messageProcessor';
 import { chatSteps } from '../data/chatSteps';
 
 // 메시지 포맷팅
@@ -31,10 +31,10 @@ export function useMessageHandler(
       };
 
       // 사용자 메시지 추가 및 input 숨기기
-      setChatState((prev) => ({
+      setChatState((prev: ChatState) => ({
         ...prev,
         messages: [...prev.messages, formattedMessage],
-        showInput: false, // input 숨기기
+        showInput: false,
       }));
 
       const nextStep = getNextStep(chatState.currentStep);
@@ -44,14 +44,14 @@ export function useMessageHandler(
 
       // 다음 단계 타입에 따라 처리
       if (nextStepData.type === 'message') {
-        MessageProcessor.processMessageStep(nextStep, message.message, setChatState);
+        processMessageStep(nextStep, message.message, setChatState);
       } else if (nextStepData.type === 'question') {
         // question 타입인 경우 단계를 먼저 업데이트
-        setChatState((prev) => ({
+        setChatState((prev: ChatState) => ({
           ...prev,
           currentStep: nextStep,
         }));
-        MessageProcessor.processQuestionStep(nextStep, message.message, setChatState);
+        processQuestionStep(nextStep, message.message, setChatState);
       }
     },
     [chatState.currentStep]
