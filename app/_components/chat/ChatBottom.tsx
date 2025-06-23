@@ -24,7 +24,7 @@ export default function ChatBottom({
   }
 
   return (
-    <div className="absolute right-0 bottom-0 left-0 w-full bg-white p-8">
+    <div className="absolute right-0 bottom-0 left-0 z-10 w-full bg-white p-8">
       <form
         onSubmit={handleSubmit}
         className="flex items-center gap-2 rounded-lg border-2 border-gray-300 px-4 py-2"
