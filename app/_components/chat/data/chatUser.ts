@@ -4,5 +4,5 @@ export const DOCTOR_DEFAULT = {
 } as const;
 
 export const PATIENT_DEFAULT = {
-  emoji: '😊',
+  emoji: '😢',
 } as const;

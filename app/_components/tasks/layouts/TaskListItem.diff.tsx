@@ -2,7 +2,7 @@
 
 import { useCallback, memo, useMemo } from 'react';
 import type { TaskListItemProps } from '@/app/_components/tasks/types/task';
-import Checkbox from '@/components/ui/checkbox';
+import Checkbox from '@/components/ui/input/checkbox';
 
 /**
  * [React Hooks 학습 포인트]

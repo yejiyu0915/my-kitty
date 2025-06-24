@@ -1,4 +1,18 @@
-import { SelectInputProps } from '../../types/input';
+import { ChangeEvent } from 'react';
+
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
+interface SelectInputProps {
+  value: string;
+  onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+  placeholder: string;
+  disabled: boolean;
+  options: SelectOption[];
+  className?: string;
+}
 
 export default function SelectInput({
   value,
@@ -6,13 +20,14 @@ export default function SelectInput({
   placeholder,
   disabled,
   options,
+  className = '',
 }: SelectInputProps) {
   return (
     <select
       value={value}
       onChange={onChange}
       disabled={disabled}
-      className="flex-1 bg-transparent outline-none disabled:opacity-50"
+      className={`flex-1 bg-transparent outline-none disabled:opacity-50 ${className}`}
     >
       <option value="">{placeholder}</option>
       {options.map((option) => (

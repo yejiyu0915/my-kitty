@@ -23,14 +23,14 @@ export default function ChatContent({ messages, isWaiting }: ChatContentProps) {
       {messages.map((item, index) => (
         <ChatBubble
           key={item.id}
-          type={index % 2 === 0 ? 'doctor' : 'patient'}
+          type={item.type || (index % 2 === 0 ? 'doctor' : 'patient')}
           message={item.message}
         />
       ))}
       {isWaiting && (
         <ChatBubble
           type="doctor"
-          message="원장님이 응답하는 중..."
+          message="원장님이 입력하는 중..."
           messageClassName="!text-gray-400"
         />
       )}

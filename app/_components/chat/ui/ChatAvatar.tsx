@@ -1,4 +1,4 @@
-import { ChatAvatarProps } from '../../types/chat';
+import { ChatAvatarProps } from '../types/chat';
 
 export default function ChatAvatar({ emoji, isDoctor }: ChatAvatarProps) {
   return (

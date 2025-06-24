@@ -26,12 +26,14 @@ export default function TaskListContent({
 
   return (
     <div
-      className={`mt-2 max-h-[80vh] w-80 overflow-y-auto rounded-lg bg-white p-4 shadow-xs transition-all duration-200 ${
-        isOpen ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-2 opacity-0'
+      className={`mt-2 max-h-[80vh] w-80 overflow-y-auto rounded-lg bg-white shadow-xs transition-all duration-200 ${
+        isOpen
+          ? 'pointer-events-auto visible z-50 translate-y-0 opacity-100'
+          : 'pointer-events-none invisible -z-10 -translate-y-2 opacity-0 select-none'
       }`}
     >
-      <h2 className="mb-4 text-lg font-semibold">고양이 병원 🏥</h2>
-      <div className="space-y-2">{categoryList}</div>
+      <h2 className="sticky top-0 z-10 bg-white p-4 text-lg font-semibold">고양이 병원 🏥</h2>
+      <div className="space-y-2 px-4 pb-4">{categoryList}</div>
     </div>
   );
 }

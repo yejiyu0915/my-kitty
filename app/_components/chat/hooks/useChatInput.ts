@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { ChatMessage } from '../types/chat';
-import { validateInput, createChatMessage } from '../utils/chatInput';
-import { ChatStep } from '../types/step';
+import { ChatStep } from '../data/chatSchemas';
+import { nanoid } from 'nanoid';
 
 interface UseChatInputProps {
   currentStepData: ChatStep;
@@ -9,13 +9,28 @@ interface UseChatInputProps {
   onSendMessage: (message: ChatMessage) => void;
 }
 
+// 입력값 유효성 검사
+const validateInput = (value: string, validation?: (value: string) => boolean): boolean => {
+  if (!validation) return true;
+  return validation(value);
+};
+
+// 채팅 메시지 생성
+const createChatMessage = (message: string): ChatMessage => ({
+  id: nanoid(),
+  message,
+});
+
 export function useChatInput({ currentStepData, isTyping, onSendMessage }: UseChatInputProps) {
   const [inputValue, setInputValue] = useState('');
 
-  const isInputValid = useMemo(
-    () => validateInput(inputValue, currentStepData.validation),
-    [inputValue, currentStepData.validation]
-  );
+  const isInputValid = useMemo(() => {
+    // message 타입일 때는 유효성 검사 건너뛰기
+    if (currentStepData.type === 'message') {
+      return true;
+    }
+    return validateInput(inputValue, currentStepData.validation);
+  }, [inputValue, currentStepData.validation, currentStepData.type]);
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

@@ -1,8 +1,23 @@
 import { useCallback } from 'react';
-import { ChatMessage, ChatState } from '../types/chat';
+import { ChatMessage, ChatState } from '../data/chatSchemas';
+import { getNextStep, getStepData } from './stepUtils';
+import { processMessageStep, processQuestionStep } from './message/messageProcessor';
 import { chatSteps } from '../data/chatSteps';
-import { formatMessage } from './chatMessage';
-import { createMessageSequence } from './chatAnimation';
+
+// 메시지 포맷팅
+const formatMessage = (message: ChatMessage, currentStep: number): ChatMessage => {
+  const currentStepData = chatSteps[currentStep];
+
+  // question 타입일 때만 messageFormat 적용
+  if (currentStepData.type === 'question' && currentStepData.messageFormat) {
+    return {
+      ...message,
+      message: currentStepData.messageFormat(message.message),
+    };
+  }
+
+  return message;
+};
 
 export function useMessageHandler(
   chatState: ChatState,
@@ -10,36 +25,33 @@ export function useMessageHandler(
 ) {
   const handleSendMessage = useCallback(
     (message: ChatMessage) => {
-      const formattedMessage = formatMessage(message, chatState.currentStep);
+      const formattedMessage = {
+        ...formatMessage(message, chatState.currentStep),
+        type: 'patient' as const,
+      };
 
-      setChatState((prev) => ({
+      // 사용자 메시지 추가 및 input 숨기기
+      setChatState((prev: ChatState) => ({
         ...prev,
         messages: [...prev.messages, formattedMessage],
-        chatBottomAnimation: 'slide-down',
+        showInput: false,
       }));
 
-      if (chatState.currentStep < chatSteps.length - 1) {
-        const nextStep = chatState.currentStep + 1;
+      const nextStep = getNextStep(chatState.currentStep);
+      if (nextStep === null) return;
 
-        setChatState((prev) => ({
+      const nextStepData = getStepData(nextStep);
+
+      // 다음 단계 타입에 따라 처리
+      if (nextStepData.type === 'message') {
+        processMessageStep(nextStep, message.message, setChatState);
+      } else if (nextStepData.type === 'question') {
+        // question 타입인 경우 단계를 먼저 업데이트
+        setChatState((prev: ChatState) => ({
           ...prev,
           currentStep: nextStep,
         }));
-
-        createMessageSequence(message, nextStep, {
-          onWaitingStart: () => setChatState((prev) => ({ ...prev, isWaiting: true })),
-          onDoctorMessage: (doctorMessage) =>
-            setChatState((prev) => ({
-              ...prev,
-              messages: [...prev.messages, doctorMessage],
-            })),
-          onWaitingEnd: () => setChatState((prev) => ({ ...prev, isWaiting: false })),
-          onAnimationComplete: () =>
-            setChatState((prev) => ({
-              ...prev,
-              chatBottomAnimation: 'slide-up-bottom',
-            })),
-        });
+        processQuestionStep(nextStep, message.message, setChatState);
       }
     },
     [chatState.currentStep]
