@@ -3,7 +3,6 @@ import localFont from 'next/font/local';
 import './globals.css';
 import Header from '@/components/layouts/Header';
 import Footer from '@/components/layouts/Footer';
-import GlobalDebugPanel from '@/app/_components/debug/GlobalDebugPanel';
 
 const pretendard = localFont({
   src: './fonts/PretendardVariable.woff2',
