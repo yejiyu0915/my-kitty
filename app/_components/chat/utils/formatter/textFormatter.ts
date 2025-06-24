@@ -1,6 +1,6 @@
 // 텍스트 포맷팅 함수들
 export const formatName = (value: string): string => {
-  return `${value}입니다.`;
+  return `${value}라고 합니다.`;
 };
 
 export const formatGender = (value: string): string => {

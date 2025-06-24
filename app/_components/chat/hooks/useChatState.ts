@@ -3,6 +3,13 @@ import { ChatState } from '../types/chat';
 import { chatSteps } from '../data/chatSteps';
 import { nanoid } from 'nanoid';
 
+// 시간 지연 상수 (밀리초 단위)
+const TIMING = {
+  INITIAL_WAIT: 1000, // 초기 대기 시간
+  MESSAGE_DELAY: 500, // 메시지 표시 지연 시간
+  INPUT_DELAY: 750, // 입력창 표시 지연 시간
+} as const;
+
 const INITIAL_STATE: ChatState = {
   messages: [],
   currentStep: 0,
@@ -39,9 +46,9 @@ export function useChatState() {
             ...prev,
             showInput: true,
           }));
-        }, 500);
-      }, 500);
-    }, 1000);
+        }, TIMING.INPUT_DELAY);
+      }, TIMING.MESSAGE_DELAY);
+    }, TIMING.INITIAL_WAIT);
   }, []);
 
   return {

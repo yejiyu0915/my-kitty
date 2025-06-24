@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { UserDataSchema } from '../../data/chatSchemas';
 import { ChatStepDomain } from '../../data/chatDomains';
-import { isValidDateRange, isValidVisitTime } from '../formatter/dateValidator';
+import { isValidDateRange, isValidVisitTime } from './dateValidator';
 
 // 도메인별 유효성 검사 함수
 export const validateByDomain = (
