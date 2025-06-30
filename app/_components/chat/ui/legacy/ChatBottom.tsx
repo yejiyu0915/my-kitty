@@ -1,9 +1,9 @@
 'use client';
-import { chatSteps } from '../data/chatSteps';
-import { ChatBottomProps } from '../types/chat';
+import { chatSteps } from '../../data/chatSteps';
+import { ChatBottomProps } from '../../types/chat';
 import ChatInput from './ChatInput';
 import Button from '@/components/ui/input/button';
-import { useChatInput } from '../hooks/useChatInput';
+import { useChatInput } from '../../hooks/useChatInput';
 
 export default function ChatBottom({
   currentStep,

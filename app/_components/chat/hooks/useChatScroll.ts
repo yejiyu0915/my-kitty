@@ -8,10 +8,11 @@
  *
  * @param messages - 채팅 메시지 배열
  * @param isWaiting - 메시지 대기 중 여부
+ * @param showInput - 입력 필드 표시 여부
  * @param options - 스크롤 동작 옵션 (부드러운 스크롤, 임계값 등)
  */
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { ChatMessage } from '../types/chat';
+import { ChatMessage } from '../data/chatSchemas';
 
 interface UseChatScrollOptions {
   smooth?: boolean;
@@ -21,6 +22,7 @@ interface UseChatScrollOptions {
 export function useChatScroll(
   messages: ChatMessage[],
   isWaiting: boolean,
+  showInput: boolean = true,
   options: UseChatScrollOptions = {}
 ) {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -75,6 +77,18 @@ export function useChatScroll(
       scrollToBottom();
     }
   }, [messages, isWaiting, isNearBottom, scrollToBottom]);
+
+  // showInput 상태 변화 시 스크롤 조정
+  useEffect(() => {
+    if (isNearBottom) {
+      // 약간의 지연을 두어 DOM 업데이트 후 스크롤 조정
+      const timer = setTimeout(() => {
+        scrollToBottom('auto');
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showInput, isNearBottom, scrollToBottom]);
 
   return {
     scrollRef,

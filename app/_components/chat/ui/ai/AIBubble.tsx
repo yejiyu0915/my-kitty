@@ -1,7 +1,7 @@
-import { ChatAIMessage } from '../types/chatAI';
-import ChatAvatar from './ChatAvatar';
-import ChatMessage from './ChatMessage';
-import { DOCTOR_DEFAULT, PATIENT_DEFAULT } from '../data/chatUser';
+import { ChatAIMessage } from '../../types/chatAI';
+import ChatAvatar from '../ChatAvatar';
+import ChatMessage from '../ChatMessage';
+import { DOCTOR_DEFAULT, PATIENT_DEFAULT } from '../../data/chatUser';
 import AIChatbotOptions from './AIChatbotOptions';
 
 interface AIMessageProps {

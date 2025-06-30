@@ -74,6 +74,7 @@ export const ChatStepSchema = z.object({
   type: z.enum(['question', 'message']),
   domain: ChatStepDomainSchema, // 도메인 추가
   question: z.string().optional(),
+  questionKey: z.string().optional(), // 답변 저장용 키 추가
   message: z.string().optional(),
   placeholder: z.string().optional(),
   validation: z.function().args(z.string()).returns(z.boolean()).optional(),

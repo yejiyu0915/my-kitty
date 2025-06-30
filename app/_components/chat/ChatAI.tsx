@@ -1,21 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useChatAIState } from './hooks/useChatAIState';
 import { useAIScroll } from './hooks/useAIScroll';
 import { callAIService } from './utils/aiService';
 import { AI_RESPONSE_TEMPLATES, APPOINTMENT_SUB_RESPONSES } from './data/aiChatbotData';
-import AIHeader from './ui/AIHeader';
-import AIBubble from './ui/AIBubble';
-import AIWaitingMessage from './ui/AIWaitingMessage';
-import AIResponseInfo from './ui/AIResponseInfo';
-import AIInput from './ui/AIInput';
+import AIHeader from './ui/ai/AIHeader';
+import AIBubble from './ui/ai/AIBubble';
+import AIWaitingMessage from './ui/ai/AIWaitingMessage';
+import AIResponseInfo from './ui/ai/AIResponseInfo';
+import AIInput from './ui/ai/AIInput';
 import ChatLayout from './ui/ChatLayout';
 
 export default function ChatAI() {
   const { chatAIState, addMessage, addAIResponse, setWaiting, setShowInput } = useChatAIState();
   const [inputMessage, setInputMessage] = useState('');
-  const [showSubOptions, setShowSubOptions] = useState(false); // 하위 선택지 표시 상태
+  const [showSubOptions, setShowSubOptions] = useState(false);
+
+  // API 호출 제한을 위한 상태
+  const [apiCallCount, setApiCallCount] = useState(0);
+  const [lastApiCallTime, setLastApiCallTime] = useState(0);
+  const isProcessingRef = useRef(false);
 
   // AI 스크롤 훅 사용
   const { scrollRef } = useAIScroll(chatAIState.messages, chatAIState.isWaiting, {
@@ -23,7 +28,24 @@ export default function ChatAI() {
     threshold: 100,
   });
 
-  // 선택지 클릭 핸들러
+  // API 호출 제한 체크 (무료 호스팅 제한 고려)
+  const canMakeApiCall = useCallback(() => {
+    const now = Date.now();
+    const timeSinceLastCall = now - lastApiCallTime;
+
+    // 1분에 최대 10회, 연속 호출 간격 최소 3초
+    if (apiCallCount >= 10 && timeSinceLastCall < 60000) {
+      return false;
+    }
+
+    if (timeSinceLastCall < 3000) {
+      return false;
+    }
+
+    return true;
+  }, [apiCallCount, lastApiCallTime]);
+
+  // 선택지 클릭 핸들러 (템플릿 응답만 사용 - API 호출 없음)
   const handleOptionSelect = async (message: string) => {
     // 사용자 선택 메시지 추가
     addMessage({
@@ -37,26 +59,21 @@ export default function ChatAI() {
     try {
       // 예약 문의인지 확인
       if (message.includes('병원 예약에 대해 문의하고 싶습니다')) {
-        // 예약 문의 선택 시 하위 선택지 표시
         setShowSubOptions(true);
 
-        // AI 응답 추가
         addMessage({
           message: AI_RESPONSE_TEMPLATES.appointment.message,
           type: 'assistant',
         });
 
-        // AI 응답 데이터 저장
         addAIResponse({
           message: AI_RESPONSE_TEMPLATES.appointment.message,
           confidence: 0.95,
           suggestedActions: [...AI_RESPONSE_TEMPLATES.appointment.suggestedActions],
         });
       } else if (showSubOptions) {
-        // 하위 선택지에서 선택한 경우
         setShowSubOptions(false);
 
-        // 선택한 하위 옵션에 따른 응답 찾기
         let subResponse;
         if (message.includes('정기검진 예약을 원합니다')) {
           subResponse = APPOINTMENT_SUB_RESPONSES.checkup;
@@ -67,26 +84,22 @@ export default function ChatAI() {
         } else if (message.includes('수술에 대한 상담을 받고 싶습니다')) {
           subResponse = APPOINTMENT_SUB_RESPONSES.surgery;
         } else {
-          subResponse = APPOINTMENT_SUB_RESPONSES.checkup; // 기본값
+          subResponse = APPOINTMENT_SUB_RESPONSES.checkup;
         }
 
-        // AI 응답 추가
         addMessage({
           message: subResponse.message,
           type: 'assistant',
         });
 
-        // AI 응답 데이터 저장
         addAIResponse({
           message: subResponse.message,
           confidence: 0.95,
           suggestedActions: [...subResponse.suggestedActions],
         });
 
-        // 입력창 표시
         setShowInput(true);
       } else {
-        // 일반 선택지 처리
         const optionId = message.includes('증상')
           ? 'symptoms'
           : message.includes('긴급')
@@ -99,26 +112,21 @@ export default function ChatAI() {
 
         const template = AI_RESPONSE_TEMPLATES[optionId];
 
-        // AI 응답 추가
         addMessage({
           message: template.message,
           type: 'assistant',
         });
 
-        // AI 응답 데이터 저장
         addAIResponse({
           message: template.message,
           confidence: 0.95,
           suggestedActions: [...template.suggestedActions],
         });
 
-        // 입력창 표시
         setShowInput(true);
       }
     } catch (error) {
       console.error('AI 응답 처리 오류:', error);
-
-      // 오류 시 기본 응답
       addMessage({
         message: '죄송합니다. AI 서비스에 일시적인 문제가 있습니다. 잠시 후 다시 시도해주세요.',
         type: 'assistant',
@@ -128,13 +136,23 @@ export default function ChatAI() {
     }
   };
 
-  const handleSendMessage = async () => {
-    if (!inputMessage.trim()) return;
+  // 실제 AI API 호출 (제한 적용)
+  const handleSendMessage = useCallback(async () => {
+    if (!inputMessage.trim() || isProcessingRef.current) return;
 
+    // API 호출 제한 체크
+    if (!canMakeApiCall()) {
+      addMessage({
+        message: '죄송합니다. API 호출 제한에 도달했습니다. 잠시 후 다시 시도해주세요.',
+        type: 'assistant',
+      });
+      return;
+    }
+
+    isProcessingRef.current = true;
     const userMessage = inputMessage;
     setInputMessage('');
 
-    // 사용자 메시지 추가
     addMessage({
       message: userMessage,
       type: 'user',
@@ -144,21 +162,20 @@ export default function ChatAI() {
     setShowInput(false);
 
     try {
-      // AI 서비스 호출
+      // API 호출 카운트 증가
+      setApiCallCount((prev) => prev + 1);
+      setLastApiCallTime(Date.now());
+
       const aiResponse = await callAIService(userMessage, chatAIState.messages);
 
-      // AI 응답 추가
       addMessage({
         message: aiResponse.message,
         type: 'assistant',
       });
 
-      // AI 응답 데이터 저장
       addAIResponse(aiResponse);
     } catch (error) {
       console.error('AI 응답 처리 오류:', error);
-
-      // 오류 시 기본 응답
       addMessage({
         message: '죄송합니다. AI 서비스에 일시적인 문제가 있습니다. 잠시 후 다시 시도해주세요.',
         type: 'assistant',
@@ -166,8 +183,17 @@ export default function ChatAI() {
     } finally {
       setWaiting(false);
       setShowInput(true);
+      isProcessingRef.current = false;
     }
-  };
+  }, [
+    inputMessage,
+    canMakeApiCall,
+    chatAIState.messages,
+    addMessage,
+    setWaiting,
+    setShowInput,
+    addAIResponse,
+  ]);
 
   return (
     <ChatLayout
@@ -193,9 +219,7 @@ export default function ChatAI() {
           <AIBubble
             key={message.id}
             message={message}
-            // 첫 번째 AI 메시지(환영 메시지)에만 선택지 표시
             showOptions={message.type === 'assistant' && index === 0 && chatAIState.showOptions}
-            // 예약 문의 응답에 하위 선택지 표시
             showSubOptions={
               message.type === 'assistant' &&
               showSubOptions &&
@@ -206,11 +230,9 @@ export default function ChatAI() {
           />
         ))}
 
-        {/* 대기 중 표시 */}
         {chatAIState.isWaiting && <AIWaitingMessage />}
       </div>
 
-      {/* AI 응답 정보 표시 */}
       <AIResponseInfo lastAIResponse={chatAIState.lastAIResponse} />
     </ChatLayout>
   );

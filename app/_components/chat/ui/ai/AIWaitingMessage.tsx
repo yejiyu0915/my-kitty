@@ -1,5 +1,5 @@
-import ChatAvatar from './ChatAvatar';
-import { DOCTOR_DEFAULT } from '../data/chatUser';
+import ChatAvatar from '../ChatAvatar';
+import { DOCTOR_DEFAULT } from '../../data/chatUser';
 
 export default function AIWaitingMessage() {
   return (

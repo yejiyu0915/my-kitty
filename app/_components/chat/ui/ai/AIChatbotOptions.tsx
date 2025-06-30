@@ -1,4 +1,4 @@
-import { AI_CHATBOT_OPTIONS, APPOINTMENT_SUB_OPTIONS } from '../data/aiChatbotData';
+import { AI_CHATBOT_OPTIONS, APPOINTMENT_SUB_OPTIONS } from '../../data/aiChatbotData';
 
 interface AIChatbotOptionsProps {
   onOptionSelect: (message: string) => void;
