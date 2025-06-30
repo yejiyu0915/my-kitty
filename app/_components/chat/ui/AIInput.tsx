@@ -39,7 +39,7 @@ export default function AIInput({
           value={inputMessage}
           onChange={(e) => onInputChange(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder="증상에 대해 설명해주세요..."
+          placeholder="입력해주세요..."
           disabled={isWaiting}
         />
         <Button
