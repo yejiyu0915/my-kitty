@@ -4,6 +4,7 @@ import { PatientData, PartialPatientData } from '../data/reportSchemas';
 // Report Props 타입
 export interface ReportProps {
   patientData?: PartialPatientData;
+  currentMode?: 'chat' | 'ai';
 }
 
 // Report Header Props

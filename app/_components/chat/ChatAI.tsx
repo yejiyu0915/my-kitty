@@ -11,9 +11,15 @@ import AIWaitingMessage from './ui/ai/AIWaitingMessage';
 import AIResponseInfo from './ui/ai/AIResponseInfo';
 import AIInput from './ui/ai/AIInput';
 import ChatLayout from './ui/ChatLayout';
+import React from 'react';
 
-export default function ChatAI() {
-  const { chatAIState, addMessage, addAIResponse, setWaiting, setShowInput } = useChatAIState();
+interface ChatAIProps {
+  onReset?: () => void;
+}
+
+export default function ChatAI({ onReset }: ChatAIProps) {
+  const { chatAIState, addMessage, addAIResponse, setWaiting, setShowInput, resetChatAI } =
+    useChatAIState();
   const [inputMessage, setInputMessage] = useState('');
   const [showSubOptions, setShowSubOptions] = useState(false);
 
@@ -21,6 +27,9 @@ export default function ChatAI() {
   const [apiCallCount, setApiCallCount] = useState(0);
   const [lastApiCallTime, setLastApiCallTime] = useState(0);
   const isProcessingRef = useRef(false);
+
+  // 대화가 진행되었는지 확인 (환영 메시지 외에 다른 메시지가 있는지)
+  const hasConversationProgress = chatAIState.messages.length > 1;
 
   // AI 스크롤 훅 사용
   const { scrollRef } = useAIScroll(chatAIState.messages, chatAIState.isWaiting, {
@@ -194,6 +203,27 @@ export default function ChatAI() {
     setShowInput,
     addAIResponse,
   ]);
+
+  // AI 모드 리셋 처리
+  const handleAIReset = () => {
+    if (hasConversationProgress) {
+      // 대화가 진행되었을 때만 리셋
+      resetChatAI();
+      setInputMessage('');
+      setShowSubOptions(false);
+      setApiCallCount(0);
+      setLastApiCallTime(0);
+      isProcessingRef.current = false;
+    }
+    // 대화가 진행되지 않았으면 아무 동작도 하지 않음
+  };
+
+  // onReset prop이 변경될 때 처리
+  React.useEffect(() => {
+    if (onReset) {
+      handleAIReset();
+    }
+  }, [onReset]);
 
   return (
     <ChatLayout

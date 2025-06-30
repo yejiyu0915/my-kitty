@@ -30,6 +30,11 @@ export function useChatScroll(
   const { threshold = 100, smooth = true } = options;
   const [isNearBottom, setIsNearBottom] = useState(true);
 
+  // 저장된 대화를 불러왔는지 확인 (메모이제이션)
+  const isLoadedFromStorage = useCallback(() => {
+    return messages.length > 1 && !showInput && !isWaiting;
+  }, [messages.length, showInput, isWaiting]);
+
   // 스크롤 위치 감지
   const isNearBottomOfScroll = useCallback(() => {
     if (!scrollRef.current) return true;
@@ -78,17 +83,19 @@ export function useChatScroll(
     }
   }, [messages, isWaiting, isNearBottom, scrollToBottom]);
 
-  // showInput 상태 변화 시 스크롤 조정
+  // showInput 상태 변화 시 스크롤 조정 (저장된 대화를 불러온 경우 제외)
+  // CSS transition만으로 처리하여 팍 떨어지는 현상 방지
   useEffect(() => {
-    if (isNearBottom) {
-      // 약간의 지연을 두어 DOM 업데이트 후 스크롤 조정
-      const timer = setTimeout(() => {
-        scrollToBottom('auto');
-      }, 100);
-
-      return () => clearTimeout(timer);
+    if (isNearBottom && !isLoadedFromStorage()) {
+      // 스크롤 조정을 비활성화하고 CSS transition만 사용
+      // const timer = setTimeout(() => {
+      //   requestAnimationFrame(() => {
+      //     scrollToBottom('smooth');
+      //   });
+      // }, 800);
+      // return () => clearTimeout(timer);
     }
-  }, [showInput, isNearBottom, scrollToBottom]);
+  }, [showInput, isNearBottom, scrollToBottom, isLoadedFromStorage]);
 
   return {
     scrollRef,

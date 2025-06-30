@@ -76,6 +76,11 @@ export function useChatAIState() {
     }));
   };
 
+  // AI 채팅 리셋 함수
+  const resetChatAI = () => {
+    setChatAIState(INITIAL_STATE);
+  };
+
   return {
     chatAIState,
     setChatAIState,
@@ -84,5 +89,6 @@ export function useChatAIState() {
     setWaiting,
     setShowInput,
     setShowOptions,
+    resetChatAI,
   };
 }

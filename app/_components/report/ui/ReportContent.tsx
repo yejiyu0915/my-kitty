@@ -27,6 +27,14 @@ export default function ReportContent({ patientData, hasData }: ReportContentPro
       <ReportSection title="기본 정보">
         <ul className="space-y-4">
           {patientData.name && <ReportItem label="환자명" value={patientData.name} />}
+          {patientData.symptoms && <ReportItem label="증상" value={patientData.symptoms} />}
+          {patientData.painLevel && (
+            <ReportItem
+              label="증상 강도"
+              value={patientData.painLevel}
+              formatter={getPainLevelLabel}
+            />
+          )}
           {patientData.birthDate && (
             <ReportItem
               label="생년월일"
@@ -35,17 +43,9 @@ export default function ReportContent({ patientData, hasData }: ReportContentPro
             />
           )}
           {patientData.gender && <ReportItem label="성별" value={patientData.gender} />}
+          {patientData.visitPath && <ReportItem label="방문 경로" value={patientData.visitPath} />}
           {patientData.phone && (
             <ReportItem label="연락처" value={patientData.phone} formatter={formatPhoneNumber} />
-          )}
-          {patientData.visitPath && <ReportItem label="방문 경로" value={patientData.visitPath} />}
-          {patientData.symptoms && <ReportItem label="증상" value={patientData.symptoms} />}
-          {patientData.painLevel && (
-            <ReportItem
-              label="증상 강도"
-              value={patientData.painLevel}
-              formatter={getPainLevelLabel}
-            />
           )}
           {patientData.visitDateTime && (
             <ReportItem

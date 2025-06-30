@@ -11,7 +11,7 @@ export default function ReportHeader({ visitDate }: ReportHeaderProps) {
           {visitDate ? (
             <>
               <span className="text-sm font-bold text-gray-700">{formatReportDate(visitDate)}</span>
-              <span className="text-xs font-medium text-green-600">(오늘)</span>
+              <span className="text-xs font-medium text-green-600"> (오늘)</span>
             </>
           ) : (
             <span className="text-sm text-gray-400">입력 대기 중...</span>

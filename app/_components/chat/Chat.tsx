@@ -8,6 +8,8 @@ import { useMessageHandler } from './utils/chatMessageHandler';
 import { ChatMessage } from './data/chatSchemas';
 import { chatSteps } from './data/chatSteps';
 import { usePatientData } from './hooks/usePatientData';
+import { getNextStep } from './utils/stepUtils';
+import { useState, useEffect } from 'react';
 
 interface PatientData {
   name?: string;
@@ -28,6 +30,56 @@ export default function Chat({ onPatientDataUpdate }: ChatProps) {
   const { chatState, setChatState } = useChatState();
   const { handleSendMessage } = useMessageHandler(chatState, setChatState);
   const { updatePatientData, setVisitDate, saveAnswer } = usePatientData();
+  const [showFinishMessage, setShowFinishMessage] = useState(false);
+  const [isLoadedFromStorage, setIsLoadedFromStorage] = useState(false);
+
+  // 대화가 종료되었는지 확인 (다음 단계가 없고, 대기 중이 아니고, 입력창이 숨겨져 있을 때)
+  const isConversationFinished = () => {
+    const nextStep = getNextStep(chatState.currentStep);
+    return nextStep === null && !chatState.isWaiting && !chatState.showInput;
+  };
+
+  // 저장된 대화를 불러왔는지 확인
+  useEffect(() => {
+    const savedConversation = localStorage.getItem('cathouse_conversation_data');
+    if (savedConversation) {
+      setIsLoadedFromStorage(true);
+    }
+  }, []);
+
+  // 대화 종료 시 안내 메시지 표시
+  useEffect(() => {
+    if (isConversationFinished()) {
+      if (isLoadedFromStorage) {
+        // 저장된 대화를 불러온 경우 즉시 안내 메시지 표시
+        setShowFinishMessage(true);
+      } else {
+        // 새로 완료된 대화인 경우 2초 후 안내 메시지 표시
+        const timer = setTimeout(() => {
+          setShowFinishMessage(true);
+
+          // 대화 내용을 localStorage에 저장
+          const conversationData = {
+            messages: chatState.messages,
+            currentStep: chatState.currentStep,
+            timestamp: new Date().toISOString(),
+          };
+          localStorage.setItem('cathouse_conversation_data', JSON.stringify(conversationData));
+          console.log('대화 내용 저장됨:', conversationData);
+        }, 2000);
+
+        return () => clearTimeout(timer);
+      }
+    } else {
+      setShowFinishMessage(false);
+    }
+  }, [
+    chatState.currentStep,
+    chatState.isWaiting,
+    chatState.showInput,
+    chatState.messages,
+    isLoadedFromStorage,
+  ]);
 
   // 환자 데이터 업데이트 함수
   const updatePatientDataWithStep = (currentStep: number, message: string) => {
@@ -149,6 +201,7 @@ export default function Chat({ onPatientDataUpdate }: ChatProps) {
         messages={chatState.messages}
         isWaiting={chatState.isWaiting}
         showInput={chatState.showInput}
+        isConversationFinished={showFinishMessage}
       />
     </ChatLayout>
   );

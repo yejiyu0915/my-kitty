@@ -151,6 +151,6 @@ export const chatSteps: ChatStep[] = [
     id: nanoid(),
     type: 'message',
     domain: CHAT_STEP_DOMAINS[13],
-    message: '예약 변동사항이 있다면 연락주세요.',
+    message: '예약 변동사항이 있다면 연락주세요. 감사합니다.',
   },
 ];
