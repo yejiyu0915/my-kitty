@@ -1,8 +1,8 @@
 'use client';
 
-import ChatBubble from './ui/ChatBubble';
-import { ChatMessage } from './types/chat';
-import { useChatScroll } from './hooks/useChatScroll';
+import ChatBubble from './ChatBubble';
+import { ChatMessage } from '../data/chatSchemas';
+import { useChatScroll } from '../hooks/useChatScroll';
 
 interface ChatContentProps {
   messages: ChatMessage[];
@@ -18,7 +18,7 @@ export default function ChatContent({ messages, isWaiting }: ChatContentProps) {
   return (
     <div
       ref={scrollRef}
-      className="scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-transparent mt-4 mb-24 flex-1 overflow-y-auto pr-4 pb-8"
+      className="scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-transparent mt-4 mb-26 flex-1 overflow-y-auto pr-4 pb-8"
     >
       {messages.map((item, index) => (
         <ChatBubble
