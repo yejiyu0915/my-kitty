@@ -34,11 +34,6 @@ export async function callGeminiAPI(
       parts: [{ text: userMessage }],
     });
 
-    console.log('Gemini API 호출:', {
-      model: GEMINI_CONFIG.model,
-      message: userMessage,
-    });
-
     // Gemini API 호출
     const response = await fetch(`${GEMINI_CONFIG.baseUrl}?key=${GEMINI_CONFIG.apiKey}`, {
       method: 'POST',
@@ -58,15 +53,12 @@ export async function callGeminiAPI(
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Gemini API 오류:', errorText);
       throw new Error(`Gemini API 호출 실패: ${response.status} - ${errorText}`);
     }
 
     const data: GeminiResponse = await response.json();
     const aiResponse =
       data.candidates[0]?.content?.parts[0]?.text || '죄송합니다. 응답을 생성할 수 없습니다.';
-
-    console.log('Gemini 응답:', aiResponse);
 
     // 응답 신뢰도 계산
     const confidence = calculateConfidence(userMessage, aiResponse);
