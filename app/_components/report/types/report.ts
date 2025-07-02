@@ -27,7 +27,6 @@ export interface ReportSectionProps {
 // Report Item Props
 export interface ReportItemProps {
   label: string;
-  value?: string;
   formatter?: (value: string) => string;
 }
 

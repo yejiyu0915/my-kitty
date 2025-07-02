@@ -12,7 +12,6 @@ export interface ChatBubbleProps {
 
 // 채팅 메시지 컴포넌트 Props
 export interface ChatMessageProps {
-  message: ReactNode;
   isDoctor: boolean;
   className?: string;
 }
