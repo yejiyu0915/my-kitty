@@ -11,13 +11,7 @@ export default function Report({ patientData, currentMode = 'chat' }: ReportProp
 
   // AI 모드일 때는 사용 불가 메시지 표시
   if (currentMode === 'ai') {
-    return (
-      <ReportLayout>
-        <div className="flex h-full items-center justify-center">
-          <p className="text-center text-gray-500">AI 모드에서는 사용할 수 없습니다.</p>
-        </div>
-      </ReportLayout>
-    );
+    return null; // AI 모드일 때는 컴포넌트를 렌더링하지 않음
   }
 
   return (

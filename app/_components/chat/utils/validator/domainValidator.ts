@@ -44,7 +44,7 @@ export const validateByDomain = (
         if (!isValidVisitTime(value)) {
           return {
             isValid: false,
-            error: '일요일을 제외하고, 9:00~18:00 사이의 30분 단위 시간을 선택해주세요',
+            error: '9:00~18:00 사이 30분 단위 시간을 선택해주세요(일요일 제외)',
           };
         }
         break;

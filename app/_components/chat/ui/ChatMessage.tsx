@@ -17,7 +17,11 @@ export default function ChatMessage({
         isDoctor ? 'rounded-tl-none bg-gray-100' : 'bg-primary/20 rounded-tr-none'
       }`}
     >
-      <p className={className ? `text-gray-800 ${className}` : 'text-gray-800'}>{message}</p>
+      <p
+        className={`text-sm break-keep md:text-base ${className ? `text-gray-800 ${className}` : 'text-gray-800'}`}
+      >
+        {message}
+      </p>
       {children && <div className="mt-3">{children}</div>}
     </div>
   );

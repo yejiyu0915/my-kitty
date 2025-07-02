@@ -10,12 +10,9 @@ export const UserDataSchema = z.object({
 
   symptoms: z.string().min(1, '증상을 입력해주세요'),
 
-  painLevel: z.enum(
-    ['매우 심합니다.', '심합니다.', '보통입니다.', '약간 아픕니다.', '엄청 아프진 않아요.'],
-    {
-      errorMap: () => ({ message: '증상 강도를 선택해주세요' }),
-    }
-  ),
+  painLevel: z.enum(['매우 심합니다.', '심합니다.', '보통입니다.', '약합니다.', '매우 약합니다.'], {
+    errorMap: () => ({ message: '증상 강도를 선택해주세요' }),
+  }),
 
   birthDate: z.string().refine((val) => {
     if (!val) return false;
@@ -62,7 +59,7 @@ export const UserDataSchema = z.object({
     if (minutes !== 0 && minutes !== 30) return false;
 
     return true;
-  }, '일요일을 제외하고, 9:00~18:00 사이의 30분 단위 시간을 선택해주세요'),
+  }, '9:00~18:00 사이 30분 단위 시간을 선택해주세요(일요일 제외)'),
 });
 
 // 도메인 스키마 (chatDomains에서 import)

@@ -137,7 +137,7 @@ export const chatSteps: ChatStep[] = [
     questionKey: '방문 일시',
     placeholder: '방문 날짜와 시간을 선택해주세요. (일요일 제외, 9:00~18:00, 30분 단위)',
     validation: (value: string) => validateByStep(11, value).isValid,
-    errorMessage: '일요일을 제외하고, 9:00~18:00 사이의 30분 단위 시간을 선택해주세요.',
+    errorMessage: '9:00~18:00 사이 30분 단위 시간을 선택해주세요(일요일 제외)',
     messageFormat: formatVisitDateTime,
     inputType: 'datetime-local',
   },

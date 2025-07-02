@@ -25,5 +25,5 @@ export interface AIResponse {
 }
 
 export interface ChatAIProps {
-  onAIResponse?: (response: AIResponse) => void;
+  onAIResponse?: () => void;
 }

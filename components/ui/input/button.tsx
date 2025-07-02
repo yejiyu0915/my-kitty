@@ -8,7 +8,7 @@ export default function Button({ onClick, children, className = '' }: ButtonProp
     <button
       onClick={onClick}
       className={cn(
-        'bg-primary hover:bg-primary/90 cursor-pointer rounded-sm px-4 py-2 text-white shadow-xs transition-colors',
+        'bg-primary hover:bg-primary/90 cursor-pointer rounded-sm px-3 py-1.5 text-sm text-white shadow-xs transition-colors md:px-4 md:py-2 md:text-base',
         className
       )}
     >

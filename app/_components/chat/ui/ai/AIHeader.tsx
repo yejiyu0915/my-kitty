@@ -4,8 +4,8 @@ interface AIHeaderProps {
 
 export default function AIHeader({ isWaiting }: AIHeaderProps) {
   return (
-    <div className="flex items-center justify-between">
-      <h2 className="text-2xl font-bold">🤖 Talk 예약 (AI 어시스턴트)</h2>
+    <div className="flex flex-wrap items-center justify-start gap-2 md:justify-between">
+      <h2 className="text-xl font-bold lg:text-2xl">🤖 Talk 예약 (AI 어시스턴트)</h2>
       <div className="flex items-center gap-2">
         {isWaiting ? (
           <>

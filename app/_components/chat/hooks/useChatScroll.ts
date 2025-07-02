@@ -5,17 +5,17 @@
  * 1. 새 메시지가 추가될 때 자동 스크롤
  * 2. 사용자가 스크롤을 임의로 올렸을 때는 자동 스크롤 방지
  * 3. 대기 중일 때는 항상 스크롤 다운
+ * 4. 컨테이너 크기 변화 시 자동 스크롤 조정
  *
  * @param messages - 채팅 메시지 배열
  * @param isWaiting - 메시지 대기 중 여부
  * @param showInput - 입력 필드 표시 여부
- * @param options - 스크롤 동작 옵션 (부드러운 스크롤, 임계값 등)
+ * @param options - 스크롤 동작 옵션 (임계값 등)
  */
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { ChatMessage } from '../data/chatSchemas';
 
 interface UseChatScrollOptions {
-  smooth?: boolean;
   threshold?: number;
 }
 
@@ -27,7 +27,8 @@ export function useChatScroll(
 ) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const lastScrollHeight = useRef<number>(0);
-  const { threshold = 100, smooth = true } = options;
+  const lastClientHeight = useRef<number>(0);
+  const { threshold = 100 } = options;
   const [isNearBottom, setIsNearBottom] = useState(true);
 
   // 저장된 대화를 불러왔는지 확인 (메모이제이션)
@@ -44,6 +45,13 @@ export function useChatScroll(
     return distanceFromBottom <= threshold;
   }, [threshold]);
 
+  // 스크롤 다운 함수 (간단하게 scrollTop 직접 설정)
+  const scrollToBottom = useCallback(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, []);
+
   // 스크롤 이벤트 리스너
   useEffect(() => {
     const element = scrollRef.current;
@@ -57,18 +65,66 @@ export function useChatScroll(
     return () => element.removeEventListener('scroll', handleScroll);
   }, [isNearBottomOfScroll]);
 
-  // 스크롤 다운 함수
-  const scrollToBottom = useCallback(
-    (behavior: ScrollBehavior = smooth ? 'smooth' : 'auto') => {
-      if (scrollRef.current) {
-        scrollRef.current.scrollTo({
-          top: scrollRef.current.scrollHeight,
-          behavior,
+  // ResizeObserver로 컨테이너 크기 변화 감지
+  useEffect(() => {
+    const element = scrollRef.current;
+    if (!element) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { clientHeight } = entry.target as HTMLElement;
+        const heightChanged = clientHeight !== lastClientHeight.current;
+
+        if (heightChanged && isNearBottom) {
+          // 컨테이너 높이가 변경되고 사용자가 하단에 있을 때 스크롤 조정
+          requestAnimationFrame(() => {
+            scrollToBottom();
+          });
+        }
+        lastClientHeight.current = clientHeight;
+      }
+    });
+
+    resizeObserver.observe(element);
+    return () => resizeObserver.disconnect();
+  }, [isNearBottom, scrollToBottom]);
+
+  // MutationObserver로 DOM 변화 감지 (메시지 추가/제거, 클래스 변경 등)
+  useEffect(() => {
+    const element = scrollRef.current;
+    if (!element) return;
+
+    const mutationObserver = new MutationObserver((mutations) => {
+      let shouldScroll = false;
+
+      for (const mutation of mutations) {
+        // 자식 노드 추가/제거 또는 속성 변경 시
+        if (
+          mutation.type === 'childList' ||
+          (mutation.type === 'attributes' && mutation.attributeName === 'class')
+        ) {
+          shouldScroll = true;
+          break;
+        }
+      }
+
+      if (shouldScroll && isNearBottom) {
+        // DOM 변화가 있고 사용자가 하단에 있을 때 스크롤 조정
+        requestAnimationFrame(() => {
+          scrollToBottom();
         });
       }
-    },
-    [smooth]
-  );
+    });
+
+    mutationObserver.observe(element, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => mutationObserver.disconnect();
+  }, [isNearBottom, scrollToBottom]);
 
   // 메시지 변경 시 스크롤 처리
   useEffect(() => {
@@ -83,17 +139,13 @@ export function useChatScroll(
     }
   }, [messages, isWaiting, isNearBottom, scrollToBottom]);
 
-  // showInput 상태 변화 시 스크롤 조정 (저장된 대화를 불러온 경우 제외)
-  // CSS transition만으로 처리하여 팍 떨어지는 현상 방지
+  // showInput 상태 변화 시 스크롤 조정
   useEffect(() => {
     if (isNearBottom && !isLoadedFromStorage()) {
-      // 스크롤 조정을 비활성화하고 CSS transition만 사용
-      // const timer = setTimeout(() => {
-      //   requestAnimationFrame(() => {
-      //     scrollToBottom('smooth');
-      //   });
-      // }, 800);
-      // return () => clearTimeout(timer);
+      // 입력 필드 표시/숨김 시 스크롤 조정
+      requestAnimationFrame(() => {
+        scrollToBottom();
+      });
     }
   }, [showInput, isNearBottom, scrollToBottom, isLoadedFromStorage]);
 

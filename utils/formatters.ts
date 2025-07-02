@@ -64,8 +64,8 @@ export const getPainLevelLabel = (painLevelValue: string) => {
     { value: '매우 심합니다.', label: '매우 심함' },
     { value: '심합니다.', label: '심함' },
     { value: '보통입니다.', label: '보통' },
-    { value: '약간 아픕니다.', label: '약함' },
-    { value: '엄청 아프진 않아요.', label: '매우 약함' },
+    { value: '약합니다.', label: '약함' },
+    { value: '매우 약합니다.', label: '매우 약함' },
   ];
 
   const option = painLevelOptions.find((opt) => opt.value === painLevelValue);

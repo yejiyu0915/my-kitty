@@ -2,8 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { PatientData, PartialPatientData } from '../data/reportSchemas';
 import { usePatientData } from '../../chat/hooks/usePatientData';
 
-const STORAGE_KEY = 'cathouse_patient_data';
-
 export function useReportData(externalPatientData?: PartialPatientData) {
   const { patientData: storedData, updatePatientData, setVisitDate } = usePatientData();
   const [reportData, setReportData] = useState<PatientData>({});

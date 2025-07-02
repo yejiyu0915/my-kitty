@@ -25,16 +25,14 @@ import Checkbox from '@/components/ui/input/checkbox';
 
 const TaskCheckbox = memo(function TaskCheckbox({
   task,
-  index,
   onToggle,
 }: {
   task: { id: string; text: string; isDone: boolean };
-  index: number;
   onToggle: (index: number) => void;
 }) {
   return (
     <li className="flex items-center gap-2 rounded-md bg-white p-2">
-      <Checkbox checked={task.isDone} onChange={() => onToggle(index)} label={task.text} />
+      <Checkbox checked={task.isDone} onChange={() => onToggle(0)} label={task.text} />
     </li>
   );
 });

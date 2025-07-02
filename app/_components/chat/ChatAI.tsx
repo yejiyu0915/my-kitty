@@ -241,7 +241,7 @@ export default function ChatAI({ onReset }: ChatAIProps) {
       {/* 메시지 영역 - 스크롤 훅 적용 */}
       <div
         ref={scrollRef}
-        className={`scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-transparent mt-4 flex-1 overflow-y-auto pr-4 pb-8 ${
+        className={`scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-transparent flex-1 overflow-y-auto pr-4 pb-8 ${
           chatAIState.showInput ? 'mb-26' : 'mb-4'
         }`}
       >

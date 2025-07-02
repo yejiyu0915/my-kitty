@@ -8,7 +8,7 @@ export default function AIWaitingMessage() {
       <div className="flex flex-col">
         <span className="mb-1 text-sm text-gray-500">{DOCTOR_DEFAULT.name}</span>
         <div className="rounded-2xl rounded-tl-none bg-gray-100 px-4 py-2">
-          <p className="text-gray-400">AI 어시스턴트가 입력하는 중...</p>
+          <p className="text-sm text-gray-400 md:text-base">AI 어시스턴트가 입력하는 중...</p>
         </div>
       </div>
     </div>
