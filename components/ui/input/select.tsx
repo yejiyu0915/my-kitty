@@ -29,7 +29,9 @@ export default function SelectInput({
       disabled={disabled}
       className={`flex-1 bg-transparent outline-none disabled:opacity-50 ${className}`}
     >
-      <option value="">{placeholder}</option>
+      <option value="" disabled>
+        {placeholder}
+      </option>
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}

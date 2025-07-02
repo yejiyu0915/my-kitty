@@ -1,6 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { ChatMessage } from '../types/chat';
-import { ChatStep } from '../data/chatSchemas';
+import { ChatMessage, ChatStep } from '../data/chatSchemas';
 import { nanoid } from 'nanoid';
 
 interface UseChatInputProps {
@@ -10,7 +9,16 @@ interface UseChatInputProps {
 }
 
 // 입력값 유효성 검사
-const validateInput = (value: string, validation?: (value: string) => boolean): boolean => {
+const validateInput = (
+  value: string,
+  validation?: (value: string) => boolean,
+  inputType?: string
+): boolean => {
+  // select 타입일 때는 빈 값이 아니어야 함
+  if (inputType === 'select') {
+    return value.trim() !== '';
+  }
+
   if (!validation) return true;
   return validation(value);
 };
@@ -29,8 +37,8 @@ export function useChatInput({ currentStepData, isTyping, onSendMessage }: UseCh
     if (currentStepData.type === 'message') {
       return true;
     }
-    return validateInput(inputValue, currentStepData.validation);
-  }, [inputValue, currentStepData.validation, currentStepData.type]);
+    return validateInput(inputValue, currentStepData.validation, currentStepData.inputType);
+  }, [inputValue, currentStepData.validation, currentStepData.type, currentStepData.inputType]);
 
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

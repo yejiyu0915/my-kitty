@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChatState } from '../types/chat';
+import { ChatState } from '../data/chatSchemas';
 import { chatSteps } from '../data/chatSteps';
 import { nanoid } from 'nanoid';
 
@@ -28,6 +28,34 @@ export function useChatState() {
   const [chatState, setChatState] = useState<ChatState>(INITIAL_STATE);
 
   useEffect(() => {
+    // localStorage에서 저장된 대화 내용 확인
+    const savedConversation = localStorage.getItem('cathouse_conversation_data');
+
+    if (savedConversation) {
+      try {
+        const conversationData = JSON.parse(savedConversation);
+        console.log('저장된 대화 내용 불러옴:', conversationData);
+
+        // 저장된 대화 내용이 있으면 복원
+        setChatState({
+          messages: conversationData.messages,
+          currentStep: conversationData.currentStep,
+          isWaiting: false,
+          showInput: false, // 대화가 완료된 상태이므로 입력창 숨김
+        });
+      } catch (error) {
+        console.error('저장된 대화 내용 파싱 오류:', error);
+        // 파싱 오류 시 초기화
+        initializeNewConversation();
+      }
+    } else {
+      // 저장된 대화 내용이 없으면 새 대화 시작
+      initializeNewConversation();
+    }
+  }, []);
+
+  // 새 대화 초기화 함수
+  const initializeNewConversation = () => {
     setTimeout(() => {
       setChatState((prev) => ({
         ...prev,
@@ -49,7 +77,7 @@ export function useChatState() {
         }, TIMING.INPUT_DELAY);
       }, TIMING.MESSAGE_DELAY);
     }, TIMING.INITIAL_WAIT);
-  }, []);
+  };
 
   return {
     chatState,

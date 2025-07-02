@@ -1,17 +1,28 @@
-import { useState } from 'react';
-import { ChatAIState, ChatAIMessage } from '../types/chatAI';
+import { useState, useEffect } from 'react';
+import { ChatAIState, ChatAIMessage, AIResponse } from '../types/chatAI';
+import { AI_WELCOME_MESSAGE } from '../data/aiChatbotData';
 import { nanoid } from 'nanoid';
 
 const INITIAL_STATE: ChatAIState = {
   messages: [],
   isWaiting: false,
-  showInput: true,
+  showInput: false,
+  showOptions: true,
   userData: {},
   aiResponses: [],
 };
 
 export function useChatAIState() {
   const [chatAIState, setChatAIState] = useState<ChatAIState>(INITIAL_STATE);
+
+  useEffect(() => {
+    if (chatAIState.messages.length === 0) {
+      setChatAIState((prev) => ({
+        ...prev,
+        messages: [AI_WELCOME_MESSAGE],
+      }));
+    }
+  }, []);
 
   const addMessage = (message: Omit<ChatAIMessage, 'id' | 'timestamp'>) => {
     const newMessage: ChatAIMessage = {
@@ -23,6 +34,7 @@ export function useChatAIState() {
     setChatAIState((prev) => ({
       ...prev,
       messages: [...prev.messages, newMessage],
+      showOptions: false,
     }));
 
     return newMessage;
@@ -57,6 +69,18 @@ export function useChatAIState() {
     }));
   };
 
+  const setShowOptions = (showOptions: boolean) => {
+    setChatAIState((prev) => ({
+      ...prev,
+      showOptions,
+    }));
+  };
+
+  // AI 채팅 리셋 함수
+  const resetChatAI = () => {
+    setChatAIState(INITIAL_STATE);
+  };
+
   return {
     chatAIState,
     setChatAIState,
@@ -64,5 +88,7 @@ export function useChatAIState() {
     addAIResponse,
     setWaiting,
     setShowInput,
+    setShowOptions,
+    resetChatAI,
   };
 }

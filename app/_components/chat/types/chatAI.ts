@@ -10,7 +10,8 @@ export interface ChatAIState {
   messages: ChatAIMessage[];
   isWaiting: boolean;
   showInput: boolean;
-  userData: Record<string, any>;
+  showOptions: boolean;
+  userData: Record<string, unknown>;
   aiResponses: AIResponse[];
   lastAIResponse?: AIResponse;
 }

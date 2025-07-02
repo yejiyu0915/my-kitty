@@ -1,4 +1,4 @@
-import { BaseInputProps } from '../types/input';
+import { BaseInputProps } from '../../types/input';
 import TextInput from '@/components/ui/input/text';
 import TextareaInput from '@/components/ui/input/textarea';
 import SelectInput from '@/components/ui/input/select';
