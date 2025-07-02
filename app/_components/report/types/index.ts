@@ -5,7 +5,6 @@ export { default as Report } from '../Report';
 export { default as ReportLayout } from '../ui/ReportLayout';
 export { default as ReportHeader } from '../ui/ReportHeader';
 export { default as ReportContent } from '../ui/ReportContent';
-export { default as ReportSection } from '../ui/ReportSection';
 export { default as ReportItem } from '../ui/ReportItem';
 
 // 훅들
@@ -16,17 +15,11 @@ export type {
   ReportProps,
   ReportHeaderProps,
   ReportContentProps,
-  ReportSectionProps,
   ReportItemProps,
   ReportLayoutProps,
 } from './report';
 
-export type {
-  PatientData,
-  ReportSection as ReportSectionType,
-  ReportState,
-  PartialPatientData,
-} from '../data/reportSchemas';
+export type { PatientData, ReportState, PartialPatientData } from '../data/reportSchemas';
 
 // 유틸리티 함수들
 export {

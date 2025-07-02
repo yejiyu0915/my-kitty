@@ -28,7 +28,7 @@ export const taskData = [
   {
     id: nanoid(),
     category: 'Chat',
-    isOpen: true,
+    isOpen: false,
     content: [
       { id: nanoid(), text: 'Chat 컴포넌트 분리', isDone: true },
       { id: nanoid(), text: 'Chat data 분리', isDone: true },

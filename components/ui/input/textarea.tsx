@@ -27,7 +27,7 @@ export default function TextareaInput({
       placeholder={placeholder}
       disabled={disabled}
       rows={rows}
-      className={`flex-1 resize-none bg-transparent outline-none disabled:opacity-50 ${className}`}
+      className={`flex-1 resize-none bg-transparent text-sm outline-none disabled:opacity-50 md:text-base ${className}`}
     />
   );
 }

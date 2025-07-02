@@ -62,13 +62,27 @@ export default function Home() {
     <div className="flex h-full w-full flex-col gap-4 overflow-hidden">
       <Header onModeChange={handleModeChange} currentMode={currentMode} onReset={handleReset} />
 
-      <div className="grid h-full w-full grid-cols-[3fr_1.2fr] items-start justify-between gap-4 overflow-hidden">
+      <div
+        className={`h-full w-full ${
+          currentMode === 'chat'
+            ? 'grid grid-cols-1 grid-rows-[2fr_0.9fr] items-start justify-between gap-4 overflow-hidden lg:grid-cols-[3fr_auto] lg:grid-rows-1'
+            : 'flex flex-col overflow-hidden'
+        }`}
+      >
         {currentMode === 'chat' ? (
-          <Chat key={`chat-${resetKey}`} onPatientDataUpdate={handlePatientDataUpdate} />
+          <>
+            <Chat key={`chat-${resetKey}`} onPatientDataUpdate={handlePatientDataUpdate} />
+            <Report
+              key={`report-${resetKey}`}
+              patientData={patientData}
+              currentMode={currentMode}
+            />
+          </>
         ) : (
-          <ChatAI key={`chat-${resetKey}`} onReset={handleAIReset} />
+          <div className="flex-1 overflow-hidden">
+            <ChatAI key={`chat-${resetKey}`} onReset={handleAIReset} />
+          </div>
         )}
-        <Report key={`report-${resetKey}`} patientData={patientData} currentMode={currentMode} />
       </div>
       <TaskList />
     </div>

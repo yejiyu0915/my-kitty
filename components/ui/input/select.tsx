@@ -27,7 +27,7 @@ export default function SelectInput({
       value={value}
       onChange={onChange}
       disabled={disabled}
-      className={`flex-1 bg-transparent outline-none disabled:opacity-50 ${className}`}
+      className={`flex-1 bg-transparent text-sm outline-none disabled:opacity-50 md:text-base ${className}`}
     >
       <option value="" disabled>
         {placeholder}

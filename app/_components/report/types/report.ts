@@ -18,12 +18,6 @@ export interface ReportContentProps {
   hasData: boolean;
 }
 
-// Report Section Props
-export interface ReportSectionProps {
-  title: string;
-  children: ReactNode;
-}
-
 // Report Item Props
 export interface ReportItemProps {
   label: string;

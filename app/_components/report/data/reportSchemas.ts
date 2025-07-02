@@ -14,20 +14,6 @@ export const PatientDataSchema = z.object({
   answers: z.record(z.string(), z.string()).optional(),
 });
 
-// Report 섹션 스키마
-export const ReportSectionSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  items: z.array(
-    z.object({
-      key: z.string(),
-      label: z.string(),
-      value: z.string().optional(),
-      formatter: z.function().args(z.string()).returns(z.string()).optional(),
-    })
-  ),
-});
-
 // Report 상태 스키마
 export const ReportStateSchema = z.object({
   patientData: PatientDataSchema,
@@ -37,6 +23,5 @@ export const ReportStateSchema = z.object({
 
 // 타입 추론
 export type PatientData = z.infer<typeof PatientDataSchema>;
-export type ReportSection = z.infer<typeof ReportSectionSchema>;
 export type ReportState = z.infer<typeof ReportStateSchema>;
 export type PartialPatientData = Partial<PatientData>;

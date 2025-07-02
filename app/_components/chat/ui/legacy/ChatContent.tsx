@@ -19,30 +19,23 @@ export default function ChatContent({
   isConversationFinished = false,
 }: ChatContentProps) {
   const { scrollRef, scrollToBottom } = useChatScroll(messages, isWaiting, showInput, {
-    smooth: true,
     threshold: 100,
   });
 
   // 대화 종료 메시지가 나타날 때 스크롤을 맨 아래로 내림
   useEffect(() => {
     if (isConversationFinished) {
-      const timer = setTimeout(() => {
-        // 저장된 대화를 불러온 경우인지 확인
-        const savedConversation = localStorage.getItem('cathouse_conversation_data');
-        const isLoadedFromStorage = savedConversation !== null;
-
-        // 저장된 대화를 불러온 경우는 즉시 이동, 새로 완료된 경우는 부드럽게 이동
-        const scrollBehavior = isLoadedFromStorage ? 'auto' : 'smooth';
-        scrollToBottom(scrollBehavior);
-      }, 100);
-      return () => clearTimeout(timer);
+      // 애니메이션이 완료된 후 스크롤 조정
+      requestAnimationFrame(() => {
+        scrollToBottom();
+      });
     }
   }, [isConversationFinished, scrollToBottom]);
 
   return (
     <div
       ref={scrollRef}
-      className={`chat-content-scroll scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-transparent mt-4 flex-1 overflow-y-auto pr-4 pb-8 transition-all duration-1000 ease-out ${
+      className={`chat-content-scroll scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-transparent flex-1 overflow-y-auto scroll-smooth pr-4 pb-8 ${
         showInput ? 'mb-26' : 'mb-8'
       }`}
     >

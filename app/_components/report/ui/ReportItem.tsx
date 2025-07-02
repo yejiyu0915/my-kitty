@@ -12,8 +12,8 @@ export default function ReportItem({ label, value, formatter }: ReportItemProps)
   return (
     <li className="break-keep">
       <span className="text-primary">■ </span>
-      <span className="text-md text-gray-700">{label}: </span>
-      <span className="text-md font-bold text-gray-700">{displayValue}</span>
+      <span className="text-sm text-gray-700 md:text-base">{label}: </span>
+      <span className="text-sm font-bold text-gray-700 md:text-base">{displayValue}</span>
     </li>
   );
 }

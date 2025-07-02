@@ -31,7 +31,7 @@ export default function DateTimeInput({
       step={step}
       min={min}
       max={max}
-      className={`flex-1 bg-transparent outline-none disabled:opacity-50 ${className}`}
+      className={`flex-1 bg-transparent text-sm outline-none disabled:opacity-50 md:text-base ${className}`}
     />
   );
 }

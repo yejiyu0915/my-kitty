@@ -24,7 +24,7 @@ export default function ChatBottom({
   }
 
   return (
-    <div className="absolute right-0 bottom-0 left-0 z-10 w-full bg-white p-8 pt-2">
+    <div className="absolute right-0 bottom-0 left-0 z-10 w-full bg-white p-6 pt-2 md:p-8 md:pt-2">
       <form
         onSubmit={handleSubmit}
         className="flex items-center gap-2 rounded-lg border-2 border-gray-300 px-4 py-2"
@@ -37,11 +37,12 @@ export default function ChatBottom({
           disabled={isTyping}
           type={currentStepData.inputType}
           options={currentStepData.options}
+          className="min-w-0 flex-1" // 입력 필드가 남은 공간을 모두 차지하도록 설정
         />
         <Button
           type="submit"
           disabled={!isInputValid || isTyping}
-          className={`${!isInputValid || isTyping ? 'cursor-not-allowed opacity-50' : ''}`}
+          className={`min-w-14 flex-shrink-0 ${!isInputValid || isTyping ? 'cursor-not-allowed opacity-50' : ''}`}
         >
           입력
         </Button>
@@ -49,7 +50,7 @@ export default function ChatBottom({
 
       {/* 에러 메시지 표시 */}
       {!isInputValid && inputValue && currentStepData?.errorMessage && (
-        <p className="absolute bottom-2 left-8 mt-1 pl-2 text-sm text-red-500">
+        <p className="absolute bottom-1 left-6 mt-1 w-[80%] truncate pl-2 text-xs text-red-500 md:bottom-2 md:left-8 md:text-sm">
           {currentStepData.errorMessage}
         </p>
       )}
