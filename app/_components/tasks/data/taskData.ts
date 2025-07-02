@@ -46,24 +46,10 @@ export const taskData = [
     category: 'Report',
     isOpen: false,
     content: [
-      { id: nanoid(), text: 'Report 컴포넌트 분리', isDone: false },
-      { id: nanoid(), text: '서버 컴포넌트 분리', isDone: false },
-      { id: nanoid(), text: 'Chat 이용, 데이터 바인딩', isDone: false },
-      { id: nanoid(), text: 'Report 컴포넌트 코드 리팩토링', isDone: false },
-    ],
-  },
-  {
-    id: nanoid(),
-    category: 'Improvement',
-    isOpen: false,
-    content: [
-      { id: nanoid(), text: '기능 개선', isDone: false },
-      { id: nanoid(), text: '동기적으로 구현', isDone: false },
-      { id: nanoid(), text: '애니메이션 추가', isDone: false },
-      { id: nanoid(), text: '기능 개선(2)', isDone: false },
-      { id: nanoid(), text: '반응형 작업', isDone: false },
-      { id: nanoid(), text: '기능 개선(3)', isDone: false },
-      { id: nanoid(), text: '웹접근성 개선', isDone: false },
+      { id: nanoid(), text: 'Report 컴포넌트 분리', isDone: true },
+      { id: nanoid(), text: 'Chat 이용, 데이터 바인딩', isDone: true },
+      { id: nanoid(), text: 'localStorage 적용', isDone: true },
+      { id: nanoid(), text: 'Report 컴포넌트 코드 리팩토링', isDone: true },
     ],
   },
 ];
