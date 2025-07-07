@@ -11,7 +11,6 @@ export const PatientDataSchema = z.object({
   painLevel: z.string().optional(),
   visitDateTime: z.string().optional(),
   visitDate: z.string().optional(),
-  answers: z.record(z.string(), z.string()).optional(),
 });
 
 // Report 상태 스키마

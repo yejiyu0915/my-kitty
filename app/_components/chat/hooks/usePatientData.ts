@@ -10,9 +10,6 @@ interface PatientData {
   painLevel?: string;
   visitDate?: string;
   visitDateTime?: string;
-  answers?: {
-    [key: string]: string; // 질문 키에 대한 답변 내용
-  };
 }
 
 const STORAGE_KEY = 'cathouse_patient_data';
@@ -51,36 +48,6 @@ export function usePatientData() {
     });
   }, []);
 
-  // 답변 내용 저장 함수
-  const saveAnswer = useCallback((questionKey: string, answer: string) => {
-    setPatientData((prevData) => {
-      const currentAnswers = prevData.answers || {};
-      const updatedAnswers = { ...currentAnswers, [questionKey]: answer };
-      const updatedData = { ...prevData, answers: updatedAnswers };
-
-      // 로컬스토리지에 저장
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
-        console.log(`답변 저장: ${questionKey} = ${answer}`);
-      }
-
-      return updatedData;
-    });
-  }, []);
-
-  // 특정 답변 가져오기 함수
-  const getAnswer = useCallback(
-    (questionKey: string): string | undefined => {
-      return patientData.answers?.[questionKey];
-    },
-    [patientData.answers]
-  );
-
-  // 모든 답변 가져오기 함수
-  const getAllAnswers = useCallback(() => {
-    return patientData.answers || {};
-  }, [patientData.answers]);
-
   // 환자 데이터 초기화 함수
   const clearPatientData = useCallback(() => {
     setPatientData({});
@@ -99,9 +66,6 @@ export function usePatientData() {
   return {
     patientData,
     updatePatientData,
-    saveAnswer,
-    getAnswer,
-    getAllAnswers,
     clearPatientData,
     setVisitDate,
   };

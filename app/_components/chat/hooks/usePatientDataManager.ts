@@ -15,7 +15,7 @@ export function usePatientDataManager({
   onPatientDataUpdate,
   chatState,
 }: UsePatientDataManagerProps) {
-  const { updatePatientData, setVisitDate, saveAnswer } = usePatientData();
+  const { updatePatientData, setVisitDate } = usePatientData();
 
   // 환자 데이터 업데이트 함수
   const updatePatientDataWithStep = (currentStep: number, message: string) => {
@@ -66,16 +66,6 @@ export function usePatientDataManager({
     }
   };
 
-  // 답변 내용 저장 함수
-  const saveAnswerContent = (currentStep: number, message: string) => {
-    const currentStepData = chatSteps[currentStep];
-    const questionKey = currentStepData.questionKey || `질문_${currentStep + 1}`;
-
-    // 답변 내용을 로컬스토리지에 저장
-    saveAnswer(questionKey, message);
-    console.log(`답변 내용 저장: ${questionKey} = ${message}`);
-  };
-
   // 첫 번째 답변이 제출될 때 환자 데이터 업데이트
   const handleFirstAnswer = (message: ChatMessage) => {
     console.log('handleFirstAnswer 호출됨:', message);
@@ -95,9 +85,6 @@ export function usePatientDataManager({
       updatePatientData(updateData);
       setVisitDate(); // 진료일자 설정
 
-      // 답변 내용도 저장
-      saveAnswerContent(chatState.currentStep, message.message);
-
       // 외부 콜백도 호출 (기존 호환성 유지)
       if (onPatientDataUpdate) {
         // 현재 저장된 전체 데이터를 가져와서 전달
@@ -108,9 +95,6 @@ export function usePatientDataManager({
     } else {
       // 기존 환자 데이터 업데이트 (포맷팅 전 원본 메시지 사용)
       updatePatientDataWithStep(chatState.currentStep, message.message);
-
-      // 답변 내용도 저장
-      saveAnswerContent(chatState.currentStep, message.message);
     }
   };
 

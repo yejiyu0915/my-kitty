@@ -27,7 +27,6 @@ export const hasRequiredFields = (
 ): boolean => {
   return requiredFields.every((field) => {
     const value = data[field];
-    if (field === 'answers') return true; // answers는 별도 처리
     return isValidField(value as string);
   });
 };
