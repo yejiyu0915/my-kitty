@@ -8,6 +8,7 @@ import {
   formatGender,
   formatContact,
   formatVisitDateTime,
+  formatVisitPath,
 } from '../utils/chatFormatter';
 
 export const chatSteps: ChatStep[] = [
@@ -103,7 +104,7 @@ export const chatSteps: ChatStep[] = [
     question: '어떻게 방문하게 되셨나요?',
     questionKey: '방문 경로',
     placeholder: '방문 경위를 선택해주세요.',
-    messageFormat: (value: string) => value,
+    messageFormat: formatVisitPath,
     inputType: 'radio',
     options: [
       { value: '인터넷 검색', label: '인터넷 검색' },

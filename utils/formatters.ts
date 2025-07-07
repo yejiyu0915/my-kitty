@@ -2,6 +2,9 @@
  * 공통 포맷팅 유틸리티 함수들
  */
 
+import { differenceInYears, parseISO, format, isValid } from 'date-fns';
+import { ko } from 'date-fns/locale';
+
 // 생년월일 포맷팅 및 나이 계산 함수
 export const formatBirthDateWithAge = (birthDateString: string) => {
   const birthDate = new Date(birthDateString);
@@ -26,7 +29,36 @@ export const formatBirthDateWithAge = (birthDateString: string) => {
   return `${formattedDate} (만 ${age}세)`;
 };
 
-// 연락처 포맷팅 함수
+// Chat용 생년월일 포맷팅 (YYYY-MM-DD -> YYYY년 MM월 DD일입니다.)
+export const formatBirthDate = (value: string): string => {
+  if (!value) return '';
+
+  try {
+    const date = parseISO(value);
+    if (!isValid(date)) return '';
+
+    return format(date, 'yyyy년 M월 d일입니다.', { locale: ko });
+  } catch {
+    return '';
+  }
+};
+
+// 만 나이 계산 및 포맷팅 (Chat용)
+export const formatAge = (birthDate: string): string => {
+  if (!birthDate) return '';
+
+  try {
+    const birth = parseISO(birthDate);
+    if (!isValid(birth)) return '';
+
+    const age = differenceInYears(new Date(), birth);
+    return `만 ${age}세시군요.`;
+  } catch {
+    return '';
+  }
+};
+
+// 연락처 포맷팅 함수 (Report용)
 export const formatPhoneNumber = (phoneNumber: string) => {
   // 숫자만 추출
   const numbers = phoneNumber.replace(/\D/g, '');
@@ -44,7 +76,24 @@ export const formatPhoneNumber = (phoneNumber: string) => {
   }
 };
 
-// 방문일시 포맷팅 함수
+// 연락처 포맷팅 함수 (Chat용)
+export const formatContact = (value: string): string => {
+  if (!value) return '';
+
+  // 숫자만 추출
+  const numbers = value.replace(/\D/g, '');
+
+  // 전화번호 형식으로 변환 (010-1234-5678)
+  if (numbers.length === 11) {
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7)}입니다.`;
+  } else if (numbers.length === 10) {
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 6)}-${numbers.slice(6)}입니다.`;
+  }
+
+  return `${value}입니다.`;
+};
+
+// 방문일시 포맷팅 함수 (Report용)
 export const formatVisitDateTime = (dateTimeString: string) => {
   const date = new Date(dateTimeString);
 
@@ -56,6 +105,20 @@ export const formatVisitDateTime = (dateTimeString: string) => {
   const minutes = date.getMinutes();
 
   return `${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분`;
+};
+
+// 방문 날짜/시간 포맷팅 (Chat용)
+export const formatVisitDateTimeForChat = (value: string): string => {
+  if (!value) return '';
+
+  try {
+    const date = parseISO(value);
+    if (!isValid(date)) return '';
+
+    return format(date, 'yyyy년 M월 d일 HH시 mm분입니다.', { locale: ko });
+  } catch {
+    return '';
+  }
 };
 
 // 증상 강도 label 찾기 함수
@@ -70,4 +133,28 @@ export const getPainLevelLabel = (painLevelValue: string) => {
 
   const option = painLevelOptions.find((opt) => opt.value === painLevelValue);
   return option ? option.label : painLevelValue;
+};
+
+// 이름 포맷팅 함수 (Chat용)
+export const formatName = (value: string): string => {
+  return `${value}(이)라고 합니다.`;
+};
+
+// 성별 포맷팅 함수 (Chat용)
+export const formatGender = (value: string): string => {
+  return `${value}입니다.`;
+};
+
+// 방문 경로 포맷팅 함수 (Chat용)
+export const formatVisitPath = (value: string): string => {
+  switch (value) {
+    case '인터넷 검색':
+      return '인터넷 검색으로 알아보고 왔습니다.';
+    case '지인 소개':
+      return '지인 소개로 알아보고 왔습니다.';
+    case '광고/홍보물':
+      return '광고/홍보물로 알아보고 왔습니다.';
+    default:
+      return value;
+  }
 };

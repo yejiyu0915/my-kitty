@@ -1,4 +1,13 @@
-// 기존 파일을 새로운 구조로 리다이렉트
-export { formatName, formatGender, formatContact } from './formatter/textFormatter';
-export { formatBirthDate, formatAge, formatVisitDateTime } from './formatter/dateFormatter';
+// Chat 포맷터들을 루트 formatters에서 import
+export {
+  formatName,
+  formatGender,
+  formatContact,
+  formatVisitPath,
+  formatBirthDate,
+  formatAge,
+  formatVisitDateTimeForChat as formatVisitDateTime,
+} from '@/utils/formatters';
+
+// 유효성 검사 함수들
 export { isValidDateRange, isValidVisitTime } from './validator/dateValidator';

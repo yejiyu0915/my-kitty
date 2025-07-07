@@ -1,4 +1,4 @@
-import { formatAge } from '../formatter/dateFormatter';
+import { formatAge } from '@/utils/formatters';
 
 // {name} 플레이스홀더 치환
 export const replaceNamePlaceholder = (text: string, userName: string): string => {

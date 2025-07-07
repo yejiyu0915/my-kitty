@@ -35,3 +35,25 @@ export interface ChatContentProps {
   messages: ChatMessage[];
   isWaiting: boolean;
 }
+
+// Chat 컴포넌트 관련 타입 정의
+export interface PatientData {
+  name?: string;
+  birthDate?: string;
+  gender?: string;
+  phone?: string;
+  visitPath?: string;
+  symptoms?: string;
+  painLevel?: string;
+  visitDateTime?: string;
+}
+
+export interface ChatProps {
+  onPatientDataUpdate?: (data: PatientData) => void;
+}
+
+export interface ConversationData {
+  messages: ChatMessage[];
+  currentStep: number;
+  timestamp: string;
+}
