@@ -1,6 +1,6 @@
 import { ChatAIMessage, AIResponse } from '../types/chatAI';
 
-// AI API 호출 함수
+// AI API 호출 함수 (SDK 방식으로 개선)
 export async function callAIService(
   message: string,
   conversationHistory: ChatAIMessage[]
@@ -21,19 +21,38 @@ export async function callAIService(
     });
 
     if (!response.ok) {
-      throw new Error('API 호출 실패');
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'API 호출 실패');
     }
 
     const aiResponse = await response.json();
 
     return {
       message: aiResponse.message,
-      confidence: aiResponse.confidence,
-      suggestedActions: aiResponse.suggestedActions,
+      confidence: aiResponse.confidence || 0.8,
+      suggestedActions: aiResponse.suggestedActions || [],
       timestamp: new Date().toISOString(),
     };
   } catch (error) {
     console.error('AI 서비스 호출 오류:', error);
+    throw error;
+  }
+}
+
+// 대화 세션 리셋 함수
+export async function resetAISession(): Promise<void> {
+  try {
+    const response = await fetch('/api/chat/reset', {
+      method: 'POST',
+    });
+
+    if (!response.ok) {
+      throw new Error('세션 리셋 실패');
+    }
+
+    console.log('AI 대화 세션이 리셋되었습니다.');
+  } catch (error) {
+    console.error('세션 리셋 오류:', error);
     throw error;
   }
 }
