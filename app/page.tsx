@@ -80,7 +80,7 @@ export default function Home() {
           </>
         ) : (
           <div className="flex-1 overflow-hidden">
-            <ChatAI key={`chat-${resetKey}`} onReset={handleAIReset} />
+            <ChatAI key={`chat-${resetKey}`} />
           </div>
         )}
       </div>
