@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { useChatAIState } from './hooks/useChatAIState';
 import { useAIScroll } from './hooks/useAIScroll';
-import { callAIService } from './utils/aiService';
+import { callAIService, resetAISession } from './utils/aiService';
 import { AI_RESPONSE_TEMPLATES, APPOINTMENT_SUB_RESPONSES } from './data/aiChatbotData';
 import AIHeader from './ui/ai/AIHeader';
 import AIBubble from './ui/ai/AIBubble';
@@ -205,7 +205,7 @@ export default function ChatAI({ onReset }: ChatAIProps) {
   ]);
 
   // AI 모드 리셋 처리
-  const handleAIReset = () => {
+  const handleAIReset = async () => {
     if (hasConversationProgress) {
       // 대화가 진행되었을 때만 리셋
       resetChatAI();
@@ -214,6 +214,13 @@ export default function ChatAI({ onReset }: ChatAIProps) {
       setApiCallCount(0);
       setLastApiCallTime(0);
       isProcessingRef.current = false;
+
+      // 서버 세션도 리셋
+      try {
+        await resetAISession();
+      } catch (error) {
+        console.error('서버 세션 리셋 실패:', error);
+      }
     }
     // 대화가 진행되지 않았으면 아무 동작도 하지 않음
   };

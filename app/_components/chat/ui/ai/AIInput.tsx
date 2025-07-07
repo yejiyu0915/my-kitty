@@ -41,11 +41,12 @@ export default function AIInput({
           onKeyPress={handleKeyPress}
           placeholder="입력해주세요..."
           disabled={isWaiting}
+          className="min-w-0 flex-1"
         />
         <Button
           type="submit"
           disabled={!inputMessage.trim() || isWaiting}
-          className={`${!inputMessage.trim() || isWaiting ? 'cursor-not-allowed opacity-50' : ''}`}
+          className={`min-w-14 flex-shrink-0 ${!inputMessage.trim() || isWaiting ? 'cursor-not-allowed opacity-50' : ''}`}
         >
           입력
         </Button>
